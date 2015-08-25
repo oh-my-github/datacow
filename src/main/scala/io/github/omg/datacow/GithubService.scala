@@ -23,18 +23,19 @@ object GithubService {
       repos <- getUserRepositoryNames(id)
       statuses <- getUserRepositoryStatus(id, repos)
     } yield statuses
-}
 
-object GithubRequestInterpreter extends (GithubService ~> Id.Id) {
-  import Id._
+  object GithubRequestInterpreter extends (GithubService ~> Id.Id) {
+    import Id._
 
-  override def apply[A](fa: GithubService[A]): Id[A] = fa match {
-    case GetUserRepositoryNames(userId) =>
-      println(s"get user repository nams $userId")
-      List("scala", "akka", "haskell")
+    override def apply[A](fa: GithubService[A]): Id[A] = fa match {
+      case GetUserRepositoryNames(userId) =>
+        println(s"get user repository nams $userId")
+        List("scala", "akka", "haskell")
 
-    case GetRepositoryStatus(userId, repos) =>
-      println(s"get user repo status $userId/$repos")
-      List("good", "well", "poor")
+      case GetRepositoryStatus(userId, repos) =>
+        println(s"get user repo status $userId/$repos")
+        List("good", "well", "poor")
+    }
   }
 }
+

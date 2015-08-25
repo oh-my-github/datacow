@@ -16,7 +16,9 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-experimental" % "1.0",
   "com.typesafe" % "config" % "1.3.0",
   "org.scalaz" %% "scalaz-core" % scalazVersion,
-  "org.scalaz" %% "scalaz-effect" % scalazVersion
+  "org.scalaz" %% "scalaz-effect" % scalazVersion,
+  "org.scalaj" %% "scalaj-http" % "1.1.5",
+  "io.spray" %% "spray-can" % "1.3.3"
 )
 
 Revolver.settings

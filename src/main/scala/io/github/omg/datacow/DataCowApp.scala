@@ -11,14 +11,10 @@ object DataCowApp extends App {
 
   val repos = run(getUserRepositoryNames(id))
   val statuses = run(getRepositoryStatus(id))
-
   val conf = ConfigFactory.load()
   val token = conf.getString("github.token")
 
-  println(token)
 
-  println(repos)
-  println(statuses)
 }
 
 
