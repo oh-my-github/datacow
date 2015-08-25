@@ -15,7 +15,6 @@ import spray.http._
 import spray.client.pipelining._
 import HttpMethods._
 
-import scala.util.parsing.json.JSONObject
 import scala.util.{Failure, Success}
 import scalaz.{Free, ~>, Id, Coyoneda}
 
@@ -33,12 +32,13 @@ object DataCowApp extends App {
   implicit val timeout = Timeout(15 seconds)
   import system.dispatcher
 
-  val logRequest: HttpRequest => HttpRequest = { r => println(r); r }
+  val logRequest: HttpRequest => HttpRequest = { r => println("asdasd"); r }
   val logResponse: HttpResponse => HttpResponse = { r => println(r); r }
 
   val pipeline = (
     addHeader("Content-Type", "application/json")
       ~> addCredentials(BasicHttpCredentials("1ambda", "token"))
+      ~> logRequest
       ~> sendReceive
       ~> logResponse
     )
