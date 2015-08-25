@@ -18,7 +18,10 @@ libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % scalazVersion,
   "org.scalaz" %% "scalaz-effect" % scalazVersion,
   "org.scalaj" %% "scalaj-http" % "1.1.5",
-  "io.spray" %% "spray-can" % "1.3.3"
+  "io.spray" %% "spray-can" % "1.3.3",
+  "io.spray" %% "spray-client" % "1.3.3"
 )
+
+resolvers += "spray repo" at "http://repo.spray.io"
 
 Revolver.settings
