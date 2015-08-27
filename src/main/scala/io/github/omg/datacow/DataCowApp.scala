@@ -12,7 +12,7 @@ import scala.util.{Failure, Success}
 import scalaz.{Free, ~>, Id, Coyoneda}
 
 object DataCowApp extends App {
-  import GithubService._
+  import GithubRequest._
 
   val id = "1ambda"
 

@@ -3,12 +3,12 @@ package io.github.omg.datacow
 import scalaz._
 import Scalaz._
 
-sealed trait GithubService[+A]
-final case class GetUserRepositoryNames(id: String) extends GithubService[List[String]]
-final case class GetRepositoryStatus(id: String, repos: List[String]) extends GithubService[List[String]]
+sealed trait GithubRequest[+A]
+final case class GetUserRepositoryNames(id: String) extends GithubRequest[List[String]]
+final case class GetRepositoryStatus(id: String, repos: List[String]) extends GithubRequest[List[String]]
 
-object GithubService {
-  type Requestable[A] = Coyoneda[GithubService, A]
+object GithubRequest {
+  type Requestable[A] = Coyoneda[GithubRequest, A]
 
   def run[A](fc: Free[Requestable, A]): A = Free.runFC(fc)(GithubRequestInterpreter)
 
@@ -24,10 +24,10 @@ object GithubService {
       statuses <- getUserRepositoryStatus(id, repos)
     } yield statuses
 
-  object GithubRequestInterpreter extends (GithubService ~> Id.Id) {
+  object GithubRequestInterpreter extends (GithubRequest ~> Id.Id) {
     import Id._
 
-    override def apply[A](fa: GithubService[A]): Id[A] = fa match {
+    override def apply[A](fa: GithubRequest[A]): Id[A] = fa match {
       case GetUserRepositoryNames(userId) =>
         println(s"get user repository nams $userId")
         List("scala", "akka", "haskell")
