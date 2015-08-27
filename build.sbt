@@ -10,6 +10,8 @@ val scalazVersion = "7.1.3"
 
 val sprayVersion = "1.3.3"
 
+val json4sVersion = "3.2.10"
+
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.0-M7",
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
@@ -22,7 +24,7 @@ libraryDependencies ++= Seq(
   "org.scalaj" %% "scalaj-http" % "1.1.5",
   "io.spray" %% "spray-can" % sprayVersion,
   "io.spray" %% "spray-client" % sprayVersion,
-  "org.json4s" %% "json4s-native" % "3.2.10"
+  "io.spray" %%  "spray-json" % "1.3.2"
 )
 
 resolvers += "spray repo" at "http://repo.spray.io"

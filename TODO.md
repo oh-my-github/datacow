@@ -11,9 +11,16 @@
 
 # DONE
 
+## Day 2
+
+- request actor
+- JSON parsing
+- github http request actor 
+- actor logging
+
+
 ## Day 1
 
 - ~~actor system~~
-- request actor
 
 
