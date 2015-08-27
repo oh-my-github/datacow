@@ -23,6 +23,7 @@ class GithubRequestSender extends Actor with ActorLogging {
 
   val conf = ConfigFactory.load()
   val token = conf.getString("github.token")
+  val id = conf.getString("github.id")
 
   override def receive = {
     case "request" =>
@@ -30,9 +31,7 @@ class GithubRequestSender extends Actor with ActorLogging {
       val pipeline = (
         addHeader("Accept", "application/json")
           ~> addCredentials(BasicHttpCredentials("1ambda", token))
-          ~> logRequest
           ~> sendReceive
-          ~> logResponse
           ~> unmarshal[String]
         )
 

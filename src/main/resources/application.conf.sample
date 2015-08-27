@@ -1,5 +1,6 @@
 github {
     token=none
+    id = "github-id"
 }
 
 akka {
