@@ -40,7 +40,7 @@ class GithubRequestSender extends Actor with ActorLogging {
 
       res.onComplete {
         case Success(response) =>
-          println(response.parseJson.prettyPrint)
+          log.info(response.parseJson.prettyPrint)
           system terminate
 
         case Failure(t) =>

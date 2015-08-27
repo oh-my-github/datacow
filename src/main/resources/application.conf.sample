@@ -2,3 +2,8 @@ github {
     token=none
 }
 
+akka {
+    loglevel = DEBUG
+    # log-config-on-start = on
+}
+
