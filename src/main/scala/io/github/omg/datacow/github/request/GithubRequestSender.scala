@@ -1,17 +1,14 @@
-package io.github.omg.datacow
+package io.github.omg.datacow.github.request
 
-import akka.actor.{ActorLogging, Actor}
+import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
-
-import spray.http._
 import spray.client.pipelining._
-
+import spray.http._
 import spray.json._
-import DefaultJsonProtocol._
 
 import scala.concurrent.duration._
-import scala.util.{Success, Failure}
+import scala.util.{Failure, Success}
 
 class GithubRequestSender extends Actor with ActorLogging {
   import context.dispatcher

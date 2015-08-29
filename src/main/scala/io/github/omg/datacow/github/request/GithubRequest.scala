@@ -1,9 +1,9 @@
-package io.github.omg.datacow
+package io.github.omg.datacow.github.request
 
 import scalaz._
-import Scalaz._
 
 sealed trait GithubRequest[+A]
+//final case class GetRateLimit(id: String) extends GithubRequest[]
 final case class GetUserRepositoryNames(id: String) extends GithubRequest[List[String]]
 final case class GetRepositoryStatus(id: String, repos: List[String]) extends GithubRequest[List[String]]
 

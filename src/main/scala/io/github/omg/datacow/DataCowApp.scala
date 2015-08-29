@@ -1,5 +1,7 @@
 package io.github.omg.datacow
 
+import io.github.omg.datacow.github.request.{GithubRequestSender, GithubRequest}
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 

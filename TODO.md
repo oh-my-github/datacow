@@ -1,6 +1,8 @@
 
 # TODO
 
+- github http request actor 
+
 - https://gist.github.com/pulse00/9066731
 - api test using oauth otken
 
@@ -9,15 +11,16 @@
 - db
 - fatjar
 
+
 # DONE
+
+## Day 3
 
 ## Day 2
 
-- request actor
-- JSON parsing
-- github http request actor 
-- actor logging
-
+- ~~request actor~~
+- ~~JSON parsing~~
+- ~~actor logging~~
 
 ## Day 1
 
