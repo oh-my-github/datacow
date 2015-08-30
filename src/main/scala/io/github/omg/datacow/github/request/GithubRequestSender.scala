@@ -2,10 +2,15 @@ package io.github.omg.datacow.github.request
 
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
+
 import com.typesafe.config.ConfigFactory
+
 import spray.client.pipelining._
 import spray.http._
 import spray.json._
+
+import io.github.omg.datacow.github.response.GithubResponse.Protocol._
+import io.github.omg.datacow.github.response.GithubResponse.APIRateLimit
 
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
@@ -18,25 +23,25 @@ class GithubRequestSender extends Actor with ActorLogging {
   val logRequest: HttpRequest => HttpRequest = { r => println("before"); r }
   val logResponse: HttpResponse => HttpResponse = { r => println("after"); r }
 
-  val conf = ConfigFactory.load()
-  val token = conf.getString("github.token")
-  val id = conf.getString("github.id")
+  def createPipeline(id: String, accessToken: String) = {
+
+    (addHeader("Accept", "application/json")
+      ~> addCredentials(BasicHttpCredentials(id, accessToken))
+      ~> sendReceive
+      ~> unmarshal[String])
+  }
 
   override def receive = {
-    case "request" =>
+    case GetRateLimit(id, accessToken) =>
+      println(s"GetRateLimit($id, $accessToken)")
 
-      val pipeline = (
-        addHeader("Accept", "application/json")
-          ~> addCredentials(BasicHttpCredentials("1ambda", token))
-          ~> sendReceive
-          ~> unmarshal[String]
-        )
-
+      val pipeline = createPipeline(id, accessToken)
       val res = pipeline(Get(Uri("https://api.github.com/rate_limit")))
 
       res.onComplete {
         case Success(response) =>
-          log.info(response.parseJson.prettyPrint)
+          val rateLimit = response.parseJson.convertTo[APIRateLimit]
+          log.info(rateLimit.toString)
           system terminate
 
         case Failure(t) =>
