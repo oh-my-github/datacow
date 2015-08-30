@@ -1,8 +1,8 @@
 
 # TODO
 
-- github http request actor 
-- https://gist.github.com/pulse00/9066731
+- akka-persistence-mongo: https://github.com/ironfish/akka-persistence-mongo
+
 
 ## Production 
 
@@ -14,7 +14,10 @@
 
 ## Day 3
 
+- unmarshal `/users/:username/repos`, `/repos/:owner/:repo`
 - ~~JSON parsing~~
+- github http request actor 
+- https://gist.github.com/pulse00/9066731
 
 ## Day 2
 

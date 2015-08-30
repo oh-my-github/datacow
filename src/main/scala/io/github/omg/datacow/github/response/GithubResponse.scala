@@ -16,5 +16,7 @@ object GithubResponse {
   sealed case class Resources(core: Rate, search: Rate)
   sealed case class Rate(limit: Int, remaining: Int, reset: Long)
   final case class APIRateLimit(resources: Resources, rate: Rate) extends GithubResponse
+
+  final case class
 }
 
