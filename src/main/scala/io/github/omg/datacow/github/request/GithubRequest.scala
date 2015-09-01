@@ -10,9 +10,15 @@ import scalaz.std.scalaFuture
 
 sealed trait GithubRequest
 final case class GithubCredential(id: String, accessToken: String)
-final case class GetRepositories(id: String) extends GithubRequest
-final case class GetRepositoryLanguages(id: String, repos: List[String]) extends GithubRequest
-final case class GetAPIRateLimit(id: String, accessToken: String) extends GithubRequest
+
+final case class GetRepositories(owner: String,
+                                 credential: GithubCredential) extends GithubRequest
+
+final case class GetRepositoryLanguages(owner: String,
+                                        repository: String,
+                                        credential: GithubCredential) extends GithubRequest
+
+final case class GetAPIRateLimit(crediential: GithubCredential) extends GithubRequest
 
 object GithubRequest {}
 

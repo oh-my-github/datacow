@@ -1,7 +1,7 @@
 package io.github.omg.datacow
 
 import akka.util.Timeout
-import io.github.omg.datacow.github.request.{GetAPIRateLimit, GithubRequestInterpreter, GithubRequestSender, GithubRequest}
+import io.github.omg.datacow.github.request.{GithubCredential, GetAPIRateLimit, GithubRequestSender, GithubRequest}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -30,7 +30,7 @@ object DataCowApp extends App {
 
   val sender = system.actorOf(Props[GithubRequestSender], name="sender")
 
-  sender ! GetAPIRateLimit(id, token)
+  sender ! GetAPIRateLimit(GithubCredential(id, token))
 }
 
 
