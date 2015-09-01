@@ -5,10 +5,10 @@ import spray.json._
 
 class GithubResponseSpec extends FunSuite with Matchers {
   import GithubResponse._
+  import GithubResponse.Protocol._
+  import GithubResponseSpecFixture._
 
   test("unmarshal /rate_limit") {
-    import GithubResponse.Protocol._
-
     val response =
       """
         | {
@@ -33,15 +33,33 @@ class GithubResponseSpec extends FunSuite with Matchers {
       """.stripMargin
 
     val rateLimit:APIRateLimit = response.parseJson.convertTo[APIRateLimit]
-    println(rateLimit)
+    rateLimit.rate shouldBe Rate(5000, 5000, 1440690501)
   }
 
   test("unmarshal /users/:username/repos") {
-
+    val repoList = userReposExample.parseJson.convertTo[List[Repository]]
+    repoList.size shouldBe 2
   }
 
-  test("unmarshal /users/:owner/:repo") {
+  test("unmarshal /repos/:owner/:repo") {
+    val repo = userRepoExample.parseJson.convertTo[Repository]
+    repo.name shouldBe "scala"
+  }
 
+  test("unmarshal /repos/:onwer/:repo/languages") {
+    val json =
+    """
+      |{
+      | "Clojure": 27150,
+      | "HTML": 12914,
+      | "Ruby": 4226,
+      | "Shell": 2088
+      |}
+    """.stripMargin
+
+    val langs = json.parseJson.convertTo[List[Language]]
+    langs.size shouldBe 4
+    langs(0) shouldBe Language("Clojure", BigInt(27150))
   }
 }
 
