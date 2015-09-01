@@ -1,5 +1,6 @@
 package io.github.omg.datacow.github.request
 
+
 import akka.actor.ActorRef
 import io.github.omg.datacow.github.response.GithubResponse._
 
@@ -8,17 +9,25 @@ import scalaz._
 import Scalaz._
 import scalaz.std.scalaFuture
 
-sealed trait GithubRequest
+sealed trait GithubRequest {
+  def url: String
+}
 final case class GithubCredential(id: String, accessToken: String)
 
 final case class GetRepositories(owner: String,
-                                 credential: GithubCredential) extends GithubRequest
+                                 credential: GithubCredential) extends GithubRequest {
+  override def url: String = s"https://api.github.com/users/$owner/repos"
+}
 
 final case class GetRepositoryLanguages(owner: String,
                                         repository: String,
-                                        credential: GithubCredential) extends GithubRequest
+                                        credential: GithubCredential) extends GithubRequest {
+  override def url: String = s"https://api.github.com/repos/$owner/$repository/languages"
+}
 
-final case class GetAPIRateLimit(crediential: GithubCredential) extends GithubRequest
+final case class GetAPIRateLimit(credential: GithubCredential) extends GithubRequest {
+  override def url: String = s"https://api.github.com/rate_limit"
+}
 
 object GithubRequest {}
 

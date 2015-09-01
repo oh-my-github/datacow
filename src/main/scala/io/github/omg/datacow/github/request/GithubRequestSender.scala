@@ -4,6 +4,7 @@ import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
 
 import com.typesafe.config.ConfigFactory
+import io.github.omg.datacow.github.response.GithubResponse
 
 import spray.client.pipelining._
 import spray.http._
@@ -16,6 +17,8 @@ import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
 class GithubRequestSender extends Actor with ActorLogging {
+  import GithubResponse._
+
   import context.dispatcher
   implicit val system = context.system
   implicit val timeout = Timeout(15 seconds)
@@ -23,31 +26,50 @@ class GithubRequestSender extends Actor with ActorLogging {
   val logRequest: HttpRequest => HttpRequest = { r => println("before"); r }
   val logResponse: HttpResponse => HttpResponse = { r => println("after"); r }
 
-  def createPipeline(id: String, accessToken: String) = {
+  def createPipeline(credential: GithubCredential) = {
 
     (addHeader("Accept", "application/json")
-      ~> addCredentials(BasicHttpCredentials(id, accessToken))
+      ~> addCredentials(BasicHttpCredentials(credential.id, credential.accessToken))
       ~> sendReceive
       ~> unmarshal[String])
   }
 
   override def receive = {
-    case GetAPIRateLimit(GithubCredential(id, accessToken)) =>
-      println(s"GetRateLimit($id, $accessToken)")
+    case req@GetAPIRateLimit(credential) =>
 
-      val pipeline = createPipeline(id, accessToken)
-      val res = pipeline(Get(Uri("https://api.github.com/rate_limit")))
+      val pipeline = createPipeline(credential)
+      val res = pipeline(Get(Uri(req.url)))
 
       res.onComplete {
         case Success(response) =>
           val rateLimit = response.parseJson.convertTo[APIRateLimit]
           log.info(rateLimit.toString)
-          system terminate
 
         case Failure(t) =>
           println(t.getMessage)
-          system terminate
       }
 
+
+    case req@GetRepositories(owner, credential) =>
+      createPipeline(credential)(Get(Uri(req.url))) onComplete {
+        case Success(response) =>
+          val repos = response.parseJson.convertTo[List[Repository]]
+          log.info(repos.toString)
+
+        case Failure(t) =>
+          println(t.getMessage)
+      }
+
+
+    case req@GetRepositoryLanguages(owner, repository, credential) =>
+      createPipeline(credential)(Get(Uri(req.url))) onComplete {
+        case Success(response) =>
+          val repos = response.parseJson.convertTo[List[Language]]
+          val langs = Languages(owner, repository, repos)
+          log.info(langs.toString)
+
+        case Failure(t) =>
+          println(t.getMessage)
+      }
   }
 }
