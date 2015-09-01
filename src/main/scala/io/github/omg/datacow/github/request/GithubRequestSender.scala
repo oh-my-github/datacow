@@ -32,7 +32,7 @@ class GithubRequestSender extends Actor with ActorLogging {
   }
 
   override def receive = {
-    case GetRateLimit(id, accessToken) =>
+    case GetAPIRateLimit(id, accessToken) =>
       println(s"GetRateLimit($id, $accessToken)")
 
       val pipeline = createPipeline(id, accessToken)
@@ -48,5 +48,6 @@ class GithubRequestSender extends Actor with ActorLogging {
           println(t.getMessage)
           system terminate
       }
+
   }
 }

@@ -12,12 +12,16 @@
 
 # DONE
 
+## Day 4
+
+- ~~unmarshal `/users/:username/repos`, `/repos/:owner/:repo`~~
+- remove free  
+- complete request actor
+
 ## Day 3
 
-- unmarshal `/users/:username/repos`, `/repos/:owner/:repo`
 - ~~JSON parsing~~
-- github http request actor 
-- https://gist.github.com/pulse00/9066731
+- ~~github http request actor~~ 
 
 ## Day 2
 

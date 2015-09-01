@@ -1,7 +1,7 @@
 package io.github.omg.datacow
 
 import akka.util.Timeout
-import io.github.omg.datacow.github.request.{GithubRequestInterpreter, GithubRequestSender, GithubRequest}
+import io.github.omg.datacow.github.request.{GetAPIRateLimit, GithubRequestInterpreter, GithubRequestSender, GithubRequest}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -29,15 +29,8 @@ object DataCowApp extends App {
   import system.dispatcher
 
   val sender = system.actorOf(Props[GithubRequestSender], name="sender")
-  run(getAPIRateLimit(id, token))(createInterpreter(sender))
 
-  def createInterpreter(actor: ActorRef) = new (GithubRequest ~> Future) {
-    override def apply[A](fa: GithubRequest[A]): Future[A]=
-      (actor ? fa).asInstanceOf[Future[A]]
-  }
-
-  def run[A](fc: Free[Requestable, A])(interpreter: (GithubRequest ~> Future)): Future[A] =
-    Free.runFC(fc)(interpreter)(scalaFuture.futureInstance)
+  sender ! GetAPIRateLimit(id, token)
 }
 
 

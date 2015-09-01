@@ -10,14 +10,14 @@ object GithubRequestInterpreter
   import Id._
 
   override def apply[A](fa: GithubRequest[A]): Id[A] = fa match {
-    case GetUserRepositoryNames(userId) =>
+    case GetRepositories(userId) =>
       println(s"get user repository nams $userId")
       List("scala", "akka", "haskell")
 
-    case GetRepositoryStatus(userId, repos) =>
+    case GetRepositoryLanguages(userId, repos) =>
       println(s"get user repo status $userId/$repos")
       List("good", "well", "poor")
 
-    case GetRateLimit(id, accessToken) => ???
+    case GetAPIRateLimit(id, accessToken) => ???
   }
 }
