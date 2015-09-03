@@ -21,8 +21,7 @@ class GithubResponseProcessorSpec(_system: ActorSystem)
     val mongoPort = conf.getInt("mongo.test.port")
 
     val processor = TestActorRef(Props(new GithubResponseProcessor(mongoHost, mongoPort)), name = "processor")
-    val message = "hello processor"
+    val message = "hello"
     processor ! message
-    expectMsg(message)
   }
 }
