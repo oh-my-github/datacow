@@ -9,7 +9,7 @@ import scala.concurrent.duration._
 
 object DataCowApp extends App {
 
-  val conf = ConfigFactory.load()
+  val conf = ConfigFactory.load
   val token = conf.getString("github.token")
   val id = conf.getString("github.id")
 

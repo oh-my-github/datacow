@@ -8,3 +8,19 @@ akka {
     # log-config-on-start = on
 }
 
+mongo {
+    test {
+        url = "localhost"
+        port = 27017
+    }
+
+    local {
+        url = "localhost"
+        port = 27017
+    }
+
+    production {
+        url = "localhost"
+        port = 27017
+    }
+}
