@@ -14,7 +14,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka"       %% "akka-actor"                       % akkaVersion     % "compile",
   "com.typesafe.akka"       %% "akka-persistence-experimental"    % "2.4-M2"        % "compile",
   "com.typesafe.akka"       %% "akka-http-experimental"           % "1.0"           % "compile",
-  "com.typesafe"            % "config"                            % "1.3.0"         % "compile",
+  "com.typesafe.akka"       %% "akka-slf4j"                       % akkaVersion     % "compile",
+  "com.typesafe"            %  "config"                           % "1.3.0"         % "compile",
   "com.github.ironfish"     %% "akka-persistence-mongo-casbah"    % "0.7.6"         % "compile",
   "org.scalaz"              %% "scalaz-core"                      % scalazVersion   % "compile",
   "org.scalaz"              %% "scalaz-effect"                    % scalazVersion   % "compile",
@@ -23,6 +24,7 @@ libraryDependencies ++= Seq(
   "io.spray"                %% "spray-can"                        % sprayVersion    % "compile",
   "io.spray"                %% "spray-client"                     % sprayVersion    % "compile",
   "io.spray"                %% "spray-json"                       % "1.3.2"         % "compile",
+  "org.slf4j"               %  "slf4j-log4j12"                    % "1.7.12"        % "compile",
 
   "org.scalatest"           %% "scalatest"                        % "3.0.0-M7"      % "test",
   "de.flapdoodle.embed"     % "de.flapdoodle.embed.mongo"         % "1.50.0"        % "test",
