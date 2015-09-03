@@ -1,17 +1,17 @@
-package io.github.omg.datacow.github.request
+package omg.datacow.github.request
 
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
 
 import com.typesafe.config.ConfigFactory
-import io.github.omg.datacow.github.response.GithubResponse
+import omg.datacow.github.response.GithubResponse
 
 import spray.client.pipelining._
 import spray.http._
 import spray.json._
 
-import io.github.omg.datacow.github.response.GithubResponse.Protocol._
-import io.github.omg.datacow.github.response.GithubResponse.APIRateLimit
+import omg.datacow.github.response.GithubResponse.Protocol._
+import omg.datacow.github.response.GithubResponse.APIRateLimit
 
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}

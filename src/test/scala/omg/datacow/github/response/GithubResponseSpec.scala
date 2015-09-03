@@ -1,4 +1,4 @@
-package io.github.omg.datacow.github.response
+package omg.datacow.github.response
 
 import org.scalatest.{FunSuite, Matchers}
 import spray.json._

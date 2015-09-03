@@ -1,4 +1,4 @@
-package io.github.omg.datacow.github.request
+package omg.datacow.github.request
 
 import org.scalatest.{Matchers, FunSuite}
 

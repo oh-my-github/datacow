@@ -1,24 +1,13 @@
-package io.github.omg.datacow
+package omg.datacow
 
+import akka.actor.{ActorSystem, Props}
 import akka.util.Timeout
-import io.github.omg.datacow.github.request._
+import com.typesafe.config.ConfigFactory
+import omg.datacow.github.request._
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
-import akka.actor.{ActorRef, Props, ActorSystem}
-import akka.pattern._
-
-import com.typesafe.config.{Config, ConfigFactory}
-
-import scalaz.std.scalaFuture
-
-
-import scala.util.{Failure, Success}
-import scalaz.{Free, ~>, Id, Coyoneda}
-
 object DataCowApp extends App {
-  import GithubRequest._
 
   val conf = ConfigFactory.load()
   val token = conf.getString("github.token")
@@ -26,7 +15,6 @@ object DataCowApp extends App {
 
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(3 seconds)
-  import system.dispatcher
 
   val sender = system.actorOf(Props[GithubRequestSender], name="sender")
 

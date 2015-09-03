@@ -1,8 +1,8 @@
-package io.github.omg.datacow.github.request
+package omg.datacow.github.request
 
 
 import akka.actor.ActorRef
-import io.github.omg.datacow.github.response.GithubResponse._
+import omg.datacow.github.response.GithubResponse._
 
 import scala.concurrent.Future
 import scalaz._
