@@ -1,8 +1,10 @@
-
 language: scala
 jdk:
-  - oraclejdk8
+- oraclejdk8
 scala:
-  - 2.11.7
-script: "sbt clean coverage test"
-after_success: "sbt coveralls"
+- 2.11.7
+script: sbt clean coverage test
+after_success: sbt coveralls
+notifications:
+  slack:
+    secure: H3yjdcQ363+QBu1MWM9OC219REmWvxbXoxe8Bh4S1AF8FGVGFmVfRbGFPkpbgQx/Ydweskf0y2B8BTtVzOivyIxNhB4p9Xs8TtOUYLEBK9y/PDLFfq8o5rOTllpvWGpm2Ql6rfoLndd4nLnDDhMONGOfYM4JbWVdwuOouQk5tVOKmRYE/NQgDpcH4fB1n1cpFo8riwD6dAqYf4wNskuAvcVxu8J4eGEjvcEAtUvZ015RpcH0Ba6R2/DbKjjMrLWdHejQCgmEVMZGI0pxva6SgNxae+h+db2tFR4Ws9PXc86d5chK9vrzjYpattVvNfFzT+QLsN/seiUFElposoFIEy0/HBEVSA0yOaq5OiFnghIuH5Fo85amioVcuVZxtyR2adt2L+KXlkvcBSeISRkv0ArKMXA1T7000vveDGc9v36XGDN/pZIMtSC681tLkN5NL3VHK0GQUmz3frtH0F4NsQIl3wCUxj1ybJYPNjrchOW5eGMkrcS6V9V5c2LMuimTNMtBt/Qt1db+NWWMwEixfOdaC7pZk+YePfeEIKeDbp0sfEkbfPjitZBsDctSEAmu3pNtOnt1+/cDwUJVtV1OMWP8GwCzI91XYr4wOwQBDQJEfAvNmU6WtKFfEGtlQ+IelJNzHzc8/ig4ZlAEP6OwauVXwBPI2Q7VauveLrIerUI=
