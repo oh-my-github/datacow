@@ -13,7 +13,6 @@ class GithubResponseProcessor(host : String, port: Int) extends Actor {
   val conn: MongoClient = MongoClient(host, port)
   val col: MongoCollection = conn("omg")("github")
 
-
   override def receive: Receive = {
     case "hello" => sender ! "hello"
     case "insert" =>

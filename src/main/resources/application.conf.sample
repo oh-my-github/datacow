@@ -10,17 +10,17 @@ akka {
 
 mongo {
     test {
-        url = "localhost"
+        host = "localhost"
         port = 27017
     }
 
     local {
-        url = "localhost"
+        host = "localhost"
         port = 27017
     }
 
     production {
-        url = "localhost"
+        host = "localhost"
         port = 27017
     }
 }
