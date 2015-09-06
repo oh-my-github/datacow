@@ -12,6 +12,7 @@ import spray.json._
 
 import omg.datacow.github.response.GithubResponse.Protocol._
 import omg.datacow.github.response.GithubResponse.APIRateLimit
+import omg.datacow.github.request._
 
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
@@ -35,38 +36,22 @@ class GithubRequestSender extends Actor with ActorLogging {
   }
 
   override def receive = {
-    case req@GetAPIRateLimit(credential) =>
+    case req: GithubRequest =>
 
-      val pipeline = createPipeline(credential)
-      val res = pipeline(Get(Uri(req.url)))
+      val pipeline = createPipeline(req.getCredential)
+      val res = pipeline(Get(Uri(req.getUrl)))
 
       res.onComplete {
         case Success(response) =>
-          val rateLimit = response.parseJson.convertTo[APIRateLimit]
-          log.info(rateLimit.toString)
+          val parsed = req match {
+            case GetAPIRateLimit(_) => response.parseJson.convertTo[APIRateLimit]
+            case GetRepositories(_, _) => response.parseJson.convertTo[List[Repository]]
+            case GetRepositoryLanguages(owner, repository, _) =>
+              val langList = response.parseJson.convertTo[List[Language]]
+              Languages(owner, repository, langList)
+          }
 
-        case Failure(t) =>
-          println(t.getMessage)
-      }
-
-
-    case req@GetRepositories(owner, credential) =>
-      createPipeline(credential)(Get(Uri(req.url))) onComplete {
-        case Success(response) =>
-          val repos = response.parseJson.convertTo[List[Repository]]
-          log.info(repos.toString)
-
-        case Failure(t) =>
-          println(t.getMessage)
-      }
-
-
-    case req@GetRepositoryLanguages(owner, repository, credential) =>
-      createPipeline(credential)(Get(Uri(req.url))) onComplete {
-        case Success(response) =>
-          val repos = response.parseJson.convertTo[List[Language]]
-          val langs = Languages(owner, repository, repos)
-          log.info(langs.toString)
+          println(parsed.toString)
 
         case Failure(t) =>
           println(t.getMessage)

@@ -2,7 +2,8 @@
 # TODO
 
 - akka-persistence-mongo: https://github.com/ironfish/akka-persistence-mongo
-
+- add getCredential function to GithubRequest trait 
+-
 
 ## Production 
 
@@ -12,12 +13,14 @@
 
 # DONE
 
+## Day 6
+
+- salat
+
 ## Day 5
 
-- akka persistent mongo
-- add getCredential function to GithubRequest trait 
-- read CQRS articles
-
+- ~~akka persistent mongo~~
+- ~~read CQRS articles~~
 
 ## Day 4
 
