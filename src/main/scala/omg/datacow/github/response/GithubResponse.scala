@@ -2,8 +2,19 @@ package omg.datacow.github.response
 
 import spray.json._
 
-import GithubResponse._
-sealed trait GithubResponse
+trait GithubResponse
+sealed case class Resources(core: Rate, search: Rate)
+sealed case class Rate(limit: Int, remaining: Int, reset: Long)
+final case class APIRateLimit(resources: Resources, rate: Rate) extends GithubResponse
+
+final case class Repository(owner: String, name: String, url: String,
+                            isPrivate: Boolean, isForked: Boolean,
+                            createdAt: String, updatedAt: String, pushedAt: String,
+                            stargazersCount: Long, watchersCount: Long, forksCount: Long) extends GithubResponse
+
+final case class Language(name: String, line: BigInt)
+final case class Languages(owner: String, repositoryName: String,
+                           languages: List[Language]) extends GithubResponse
 
 object GithubResponse {
   object Protocol extends DefaultJsonProtocol {
@@ -50,17 +61,5 @@ object GithubResponse {
     }
   }
 
-  sealed case class Resources(core: Rate, search: Rate)
-  sealed case class Rate(limit: Int, remaining: Int, reset: Long)
-  final case class APIRateLimit(resources: Resources, rate: Rate) extends GithubResponse
-
-  sealed case class Repository(owner: String, name: String, url: String,
-                               isPrivate: Boolean, isForked: Boolean,
-                               createdAt: String, updatedAt: String, pushedAt: String,
-                               stargazersCount: Long, watchersCount: Long, forksCount: Long)
-
-  sealed case class Language(name: String, line: BigInt)
-  final case class Languages(owner: String, repositoryName: String,
-                             languages: List[Language]) extends GithubResponse
 }
 

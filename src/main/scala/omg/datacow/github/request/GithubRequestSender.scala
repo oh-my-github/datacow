@@ -2,8 +2,8 @@ package omg.datacow.github.request
 
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
-
-import omg.datacow.github.response.GithubResponse
+import omg.datacow.github.response._
+import omg.datacow.github.response.Language
 
 import spray.client.pipelining._
 import spray.http._
@@ -15,8 +15,6 @@ import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
 class GithubRequestSender extends Actor with ActorLogging {
-  import GithubResponse._
-
   import context.dispatcher
   implicit val system = context.system
   implicit val timeout = Timeout(15 seconds)

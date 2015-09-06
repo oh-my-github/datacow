@@ -3,7 +3,11 @@ package omg.datacow.github.response
 import akka.actor._
 import akka.testkit._
 import com.typesafe.config.ConfigFactory
+import omg.datacow.github.response.GithubResponse._
+import omg.datacow.github.response.GithubResponsePersister._
 import org.scalatest._
+
+import scala.concurrent.duration._
 
 class GithubResponsePersisterSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
@@ -14,6 +18,7 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
   val conf = ConfigFactory.load
   val mongoHost = conf.getString("mongo.test.host")
   val mongoPort = conf.getInt("mongo.test.port")
+  val mongoSchema = conf.getString("mongo.test.db")
 
   override def beforeAll: Unit = {
     EmbeddedMongo.initialize
@@ -24,22 +29,57 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
     EmbeddedMongo.stop
   }
 
-  "processor should persist message" in {
-    val processor = TestActorRef(Props(new GithubResponsePersister(mongoHost, mongoPort)), name = "processor")
-    val message = "hello"
-    processor ! message
+  "should persist Repository to the repository collection" in {
+    val persister = createPersister
+
+    val repo = Repository(
+      "1ambda", "scala", "1ambda/scala", false, false,
+      "2015-09-08", "2015-09-08", "2015-09-09", 10L, 1L, 2L)
+
+    persister ! repo
+    expectMsgPF(10 seconds) {
+      case Persisted => ()
+    }
   }
+
+  "should persist Languages to the language collection" in {
+    val persister = createPersister
+
+    val langs = Languages("1ambda", "scala", List(
+      Language("scala", BigInt(30114)),
+      Language("haskell", BigInt(20104)),
+      Language("lisp", BigInt(3014))
+    ))
+
+    persister ! langs
+    expectMsgPF(10 seconds) {
+      case Persisted => ()
+    }
+  }
+
+  "should return Failed when given an undefined GithubResponse" in {
+    val persister = createPersister
+    val emptyRate = Rate(1, 1, 1L)
+    persister ! APIRateLimit(Resources(emptyRate, emptyRate), emptyRate)
+    expectMsgPF(10 seconds) {
+      case GithubResponsePersister.Failed => ()
+    }
+  }
+
+  def createPersister =
+    TestActorRef(Props(new GithubResponsePersister(mongoHost, mongoPort, mongoSchema)))
+
 }
 
 object EmbeddedMongo {
   import de.flapdoodle.embed.mongo._
-  import de.flapdoodle.embed.mongo.distribution._
   import de.flapdoodle.embed.mongo.config._
-  import de.flapdoodle.embed.process.runtime._
-  import de.flapdoodle.embed.process.io._
+  import de.flapdoodle.embed.mongo.distribution._
   import de.flapdoodle.embed.process.config.io._
-  import de.flapdoodle.embed.process.io.directories._
   import de.flapdoodle.embed.process.extract._
+  import de.flapdoodle.embed.process.io._
+  import de.flapdoodle.embed.process.io.directories._
+  import de.flapdoodle.embed.process.runtime._
 
   val conf = ConfigFactory.load
   val mongoHost = conf.getString("mongo.test.host")

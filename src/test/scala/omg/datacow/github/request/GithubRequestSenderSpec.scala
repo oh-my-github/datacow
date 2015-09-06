@@ -3,7 +3,7 @@ package omg.datacow.github.request
 import akka.actor.ActorSystem
 import akka.testkit._
 import com.typesafe.config.ConfigFactory
-import omg.datacow.github.response.GithubResponse._
+import omg.datacow.github.response._
 import org.scalatest._
 import scala.concurrent.duration._
 
