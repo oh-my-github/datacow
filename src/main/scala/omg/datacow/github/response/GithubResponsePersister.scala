@@ -8,7 +8,7 @@ import com.mongodb.casbah.Imports._
 
 case class TestData(a: Int, b: String, c: List[Double])
 
-class GithubResponseProcessor(host : String, port: Int) extends Actor {
+class GithubResponsePersister(host : String, port: Int) extends Actor {
 
   val conn: MongoClient = MongoClient(host, port)
   val col: MongoCollection = conn("omg")("github")

@@ -5,7 +5,7 @@ import akka.testkit._
 import com.typesafe.config.ConfigFactory
 import org.scalatest._
 
-class GithubResponseProcessorSpec(_system: ActorSystem)
+class GithubResponsePersisterSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
   with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
 
@@ -25,7 +25,7 @@ class GithubResponseProcessorSpec(_system: ActorSystem)
   }
 
   "processor should persist message" in {
-    val processor = TestActorRef(Props(new GithubResponseProcessor(mongoHost, mongoPort)), name = "processor")
+    val processor = TestActorRef(Props(new GithubResponsePersister(mongoHost, mongoPort)), name = "processor")
     val message = "hello"
     processor ! message
   }
