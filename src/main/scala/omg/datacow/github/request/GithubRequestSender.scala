@@ -40,18 +40,19 @@ class GithubRequestSender extends Actor with ActorLogging {
 
       val pipeline = createPipeline(req.getCredential)
       val res = pipeline(Get(Uri(req.getUrl)))
+      val controller = sender
 
       res.onComplete {
         case Success(response) =>
-          val parsed = req match {
+          val githubRes = req match {
             case GetAPIRateLimit(_) => response.parseJson.convertTo[APIRateLimit]
-            case GetRepositories(_, _) => response.parseJson.convertTo[List[Repository]]
+            case GetUserRepositories(_, _) => response.parseJson.convertTo[List[Repository]]
             case GetRepositoryLanguages(owner, repository, _) =>
               val langList = response.parseJson.convertTo[List[Language]]
               Languages(owner, repository, langList)
           }
 
-          println(parsed.toString)
+          controller ! githubRes
 
         case Failure(t) =>
           println(t.getMessage)

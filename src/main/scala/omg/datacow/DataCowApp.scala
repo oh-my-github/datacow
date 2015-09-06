@@ -21,7 +21,7 @@ object DataCowApp extends App {
   val credential = GithubCredential(id, token)
 
   sender ! GetAPIRateLimit(credential)
-  sender ! GetRepositories("1ambda", credential)
+  sender ! GetUserRepositories("1ambda", credential)
   sender ! GetRepositoryLanguages("1ambda", "scala", credential)
 }
 
