@@ -11,16 +11,19 @@ akka {
 mongo {
     test {
         host = "localhost"
-        port = 27017
+        port = 29017
+        db = "ohmygithub-dev"
     }
 
     local {
         host = "localhost"
         port = 27017
+        db = "ohmygithub-dev"
     }
 
     production {
         host = "localhost"
         port = 27017
+        db = "ohmygithub-dev"
     }
 }
