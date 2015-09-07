@@ -2,14 +2,13 @@ package omg.datacow.github.request
 
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
-import omg.datacow.github.response._
-import omg.datacow.github.response.Language
+import omg.datacow.github.response.GithubResponse._
 
 import spray.client.pipelining._
 import spray.http._
 import spray.json._
-
-import omg.datacow.github.response.GithubResponse.Protocol._
+import omg.datacow.github.response._
+import omg.datacow.github.response.Language
 
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
@@ -39,18 +38,21 @@ class GithubRequestSender extends Actor with ActorLogging {
 
       res.onComplete {
         case Success(response) =>
-          val githubRes = req match {
-            case GetAPIRateLimit(_) => response.parseJson.convertTo[APIRateLimit]
-            case GetUserRepositories(_, _) => response.parseJson.convertTo[List[Repository]]
-            case GetRepositoryLanguages(owner, repository, _) =>
-              val langList = response.parseJson.convertTo[List[Language]]
-              Languages(GithubResponse.getCurrentDateTimeAsISOStirng, owner, repository, langList)
+          parseGithubResponse(req, response) match {
+            case Success(parsed) =>  controller ! parsed
+            case Failure(t) =>
+              log.error(t, s"failed to parse $response")
+              controller ! ParsingFailed
           }
 
-          controller ! githubRes
-
         case Failure(t) =>
-          println(t.getMessage)
+          log.error(t, "failed to send request")
+          controller ! GithubRequestSender.RequestFailed
       }
   }
+}
+
+object GithubRequestSender {
+  case object RequestFailed
+  case object ParsingFailed
 }

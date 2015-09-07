@@ -2,6 +2,7 @@
 # TODO
 
 - batch processing
+- fix travis ci test failure
 
 ## Production 
 
@@ -11,12 +12,16 @@
 
 # DONE
 
+## Day 8
+
+- routing
+- List[repository] bug
+- read user profile from mongodb
 
 ## Day 7
 
-- add date field to GithubResponse case classes 
-- fix travis ci test failure
-- read user profile from mongodb
+- ~~add date field to GithubResponse case classes~~ 
+- ~~handle failure in Sender~~
 
 ## Day 6
 

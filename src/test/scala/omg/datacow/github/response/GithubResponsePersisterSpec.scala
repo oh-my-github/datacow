@@ -33,7 +33,7 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
     val persister = createPersister
 
     val repo = Repository(
-      "015-09-07T22:50:08.699+09:00",
+      "2015-09-07T22:50:08.699+09:00",
       "1ambda", "scala", "1ambda/scala", false, false,
       "2015-09-08", "2015-09-08", "2015-09-09", 10L, 1L, 2L)
 
@@ -47,7 +47,7 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
     val persister = createPersister
 
     val langs = Languages(
-      "015-09-07T22:50:08.699+09:00", "1ambda", "scala",
+      "2015-09-07T22:50:08.699+09:00", "1ambda", "scala",
       List(
         Language("scala", 30114),
         Language("haskell", 20104),

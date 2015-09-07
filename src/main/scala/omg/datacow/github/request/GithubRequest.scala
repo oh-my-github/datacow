@@ -34,5 +34,6 @@ final case class GetAPIRateLimit(credential: GithubCredential) extends GithubReq
   override def getCredential: GithubCredential = credential
 }
 
-object GithubRequest {}
+object GithubRequest {
+}
 

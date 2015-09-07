@@ -1,9 +1,14 @@
 package omg.datacow.github.response
 
 import spray.json._
+
 import com.github.nscala_time.time.Imports._
 import org.joda.time.Days
 import org.joda.time.format._
+
+import scala.util.Try
+
+import omg.datacow.github.request._
 
 
 trait GithubResponse
@@ -23,6 +28,7 @@ final case class Languages(dateAsISOString: String,
                            languages: List[Language]) extends GithubResponse
 
 object GithubResponse {
+  case object ParsingFailed
   object Protocol extends DefaultJsonProtocol {
     implicit val rateFormat = jsonFormat3(Rate)
     implicit val resourceFormats = jsonFormat2(Resources)
@@ -71,6 +77,20 @@ object GithubResponse {
   def getCurrentDateTimeAsISOStirng: String = {
     val fmt = ISODateTimeFormat.dateTime
     fmt.print(DateTime.now)
+  }
+
+  def parseGithubResponse(request: GithubRequest, response: String) = {
+    import Protocol._
+
+    Try {
+      request match {
+        case GetAPIRateLimit(_) => response.parseJson.convertTo[APIRateLimit]
+        case GetUserRepositories(_, _) => response.parseJson.convertTo[List[Repository]]
+        case GetRepositoryLanguages(owner, repository, _) =>
+          val langList = response.parseJson.convertTo[List[Language]]
+          Languages(GithubResponse.getCurrentDateTimeAsISOStirng, owner, repository, langList)
+      }
+    }
   }
 }
 

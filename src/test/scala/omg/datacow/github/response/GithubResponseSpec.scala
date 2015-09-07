@@ -1,12 +1,29 @@
 package omg.datacow.github.response
 
+import com.typesafe.config.ConfigFactory
+import omg.datacow.github.request.{GithubCredential, GetAPIRateLimit}
 import org.scalatest.{FunSuite, Matchers}
 import spray.json._
+
+import scala.util.{Failure, Success}
 
 class GithubResponseSpec extends FunSuite with Matchers {
   import GithubResponse._
   import GithubResponse.Protocol._
   import GithubResponseSpecFixture._
+
+  val conf = ConfigFactory.load
+  val testCredential = GithubCredential(
+    conf.getString("github.id"),
+    conf.getString("github.token"))
+
+  test("parseGithubResponse should return ParsingFailed when given invalid response") {
+    val parsed = parseGithubResponse(GetAPIRateLimit(testCredential), "asdasdasd")
+    parsed match {
+      case Success(_) => fail()
+      case Failure(t) =>
+    }
+  }
 
   test("unmarshal /rate_limit") {
     val response =
