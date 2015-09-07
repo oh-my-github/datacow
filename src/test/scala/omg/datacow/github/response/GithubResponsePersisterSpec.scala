@@ -33,6 +33,7 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
     val persister = createPersister
 
     val repo = Repository(
+      "015-09-07T22:50:08.699+09:00",
       "1ambda", "scala", "1ambda/scala", false, false,
       "2015-09-08", "2015-09-08", "2015-09-09", 10L, 1L, 2L)
 
@@ -45,11 +46,13 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
   "should persist Languages to the language collection" in {
     val persister = createPersister
 
-    val langs = Languages("1ambda", "scala", List(
-      Language("scala", BigInt(30114)),
-      Language("haskell", BigInt(20104)),
-      Language("lisp", BigInt(3014))
-    ))
+    val langs = Languages(
+      "015-09-07T22:50:08.699+09:00", "1ambda", "scala",
+      List(
+        Language("scala", BigInt(30114)),
+        Language("haskell", BigInt(20104)),
+        Language("lisp", BigInt(3014))
+      ))
 
     persister ! langs
     expectMsgPF(10 seconds) {

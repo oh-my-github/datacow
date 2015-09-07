@@ -1,9 +1,7 @@
 
 # TODO
 
-- akka-persistence-mongo: https://github.com/ironfish/akka-persistence-mongo
-- add getCredential function to GithubRequest trait 
--
+- batch processing
 
 ## Production 
 
@@ -13,9 +11,17 @@
 
 # DONE
 
+
+## Day 7
+
+- add date field to GithubResponse case classes 
+- fix travis ci test failure
+- read user profile from mongodb
+
 ## Day 6
 
-- salat
+- ~~salat~~
+- ~~add getCredential function to GithubRequest trait~~ 
 
 ## Day 5
 

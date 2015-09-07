@@ -44,7 +44,7 @@ class GithubRequestSender extends Actor with ActorLogging {
             case GetUserRepositories(_, _) => response.parseJson.convertTo[List[Repository]]
             case GetRepositoryLanguages(owner, repository, _) =>
               val langList = response.parseJson.convertTo[List[Language]]
-              Languages(owner, repository, langList)
+              Languages(GithubResponse.getCurrentDateTimeAsISOStirng, owner, repository, langList)
           }
 
           controller ! githubRes

@@ -1,19 +1,25 @@
 package omg.datacow.github.response
 
 import spray.json._
+import com.github.nscala_time.time.Imports._
+import org.joda.time.Days
+import org.joda.time.format._
+
 
 trait GithubResponse
 sealed case class Resources(core: Rate, search: Rate)
 sealed case class Rate(limit: Int, remaining: Int, reset: Long)
 final case class APIRateLimit(resources: Resources, rate: Rate) extends GithubResponse
 
-final case class Repository(owner: String, name: String, url: String,
+final case class Repository(dateAsISOString: String,
+                            owner: String, name: String, url: String,
                             isPrivate: Boolean, isForked: Boolean,
                             createdAt: String, updatedAt: String, pushedAt: String,
                             stargazersCount: Long, watchersCount: Long, forksCount: Long) extends GithubResponse
 
 final case class Language(name: String, line: BigInt)
-final case class Languages(owner: String, repositoryName: String,
+final case class Languages(dateAsISOString: String,
+                           owner: String, repositoryName: String,
                            languages: List[Language]) extends GithubResponse
 
 object GithubResponse {
@@ -38,7 +44,7 @@ object GithubResponse {
             }
 
             Repository(
-              owner, name, url,
+              getCurrentDateTimeAsISOStirng, owner, name, url,
               isForked, isPrivate, createdAt, updatedAt, pushedAt,
               stargazersCount.toLong, watchersCount.toLong, forksCount.toLong
             )
@@ -61,5 +67,10 @@ object GithubResponse {
     }
   }
 
+
+  def getCurrentDateTimeAsISOStirng: String = {
+    val fmt = ISODateTimeFormat.dateTime
+    fmt.print(DateTime.now)
+  }
 }
 
