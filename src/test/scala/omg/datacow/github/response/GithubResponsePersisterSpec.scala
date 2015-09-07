@@ -16,8 +16,8 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
   def this() = this(ActorSystem("GithubResponseProcessorSpec"))
 
   val conf = ConfigFactory.load
-  val mongoHost = conf.getString("mongo.test.host")
-  val mongoPort = conf.getInt("mongo.test.port")
+  val mongoHost = conf.getString("mongo.local.host")
+  val mongoPort = conf.getInt("mongo.local.port")
   val mongoSchema = conf.getString("mongo.test.db")
 
   override def beforeAll: Unit = {
@@ -49,9 +49,9 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
     val langs = Languages(
       "015-09-07T22:50:08.699+09:00", "1ambda", "scala",
       List(
-        Language("scala", BigInt(30114)),
-        Language("haskell", BigInt(20104)),
-        Language("lisp", BigInt(3014))
+        Language("scala", 30114),
+        Language("haskell", 20104),
+        Language("lisp", 3014)
       ))
 
     persister ! langs

@@ -59,7 +59,7 @@ class GithubResponseSpec extends FunSuite with Matchers {
 
     val langs = json.parseJson.convertTo[List[Language]]
     langs.size shouldBe 4
-    langs(0) shouldBe Language("Clojure", BigInt(27150))
+    langs(0) shouldBe Language("Clojure", 27150)
   }
 }
 

@@ -17,7 +17,7 @@ final case class Repository(dateAsISOString: String,
                             createdAt: String, updatedAt: String, pushedAt: String,
                             stargazersCount: Long, watchersCount: Long, forksCount: Long) extends GithubResponse
 
-final case class Language(name: String, line: BigInt)
+final case class Language(name: String, line: Long)
 final case class Languages(dateAsISOString: String,
                            owner: String, repositoryName: String,
                            languages: List[Language]) extends GithubResponse
@@ -59,7 +59,7 @@ object GithubResponse {
     implicit val languageListFommat = new RootJsonFormat[List[Language]] {
       override def read(json: JsValue): List[Language] =
         json.asJsObject.fields.map {
-          case (lang, line) => Language(lang, BigInt(line.toString))
+          case (lang, line) => Language(lang, line.toString.toLong)
         } toList
 
       override def write(obj: List[Language]): JsValue =
