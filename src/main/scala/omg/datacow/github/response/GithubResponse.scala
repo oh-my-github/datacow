@@ -22,6 +22,8 @@ final case class Repository(dateAsISOString: String,
                             createdAt: String, updatedAt: String, pushedAt: String,
                             stargazersCount: Long, watchersCount: Long, forksCount: Long) extends GithubResponse
 
+final case class Repositories(repos: List[Repository]) // avoid to type erasure
+
 final case class Language(name: String, line: Long)
 final case class Languages(dateAsISOString: String,
                            owner: String, repositoryName: String,
@@ -85,7 +87,8 @@ object GithubResponse {
     Try {
       request match {
         case GetAPIRateLimit(_) => response.parseJson.convertTo[APIRateLimit]
-        case GetUserRepositories(_, _) => response.parseJson.convertTo[List[Repository]]
+        case GetUserRepositories(_, _) =>
+          Repositories(response.parseJson.convertTo[List[Repository]])
         case GetRepositoryLanguages(owner, repository, _) =>
           val langList = response.parseJson.convertTo[List[Language]]
           Languages(GithubResponse.getCurrentDateTimeAsISOStirng, owner, repository, langList)

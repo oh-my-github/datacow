@@ -1,6 +1,6 @@
 package omg.datacow.github.response
 
-import akka.actor.Actor
+import akka.actor.{ActorLogging, Actor}
 import akka.actor.Actor.Receive
 import com.novus.salat._
 import com.novus.salat.global._
@@ -8,9 +8,12 @@ import com.mongodb.casbah.Imports._
 import omg.datacow.github.response.GithubResponse._
 import omg.datacow.github.response.GithubResponsePersister._
 
+import scala.util._
+import scala.reflect.{ClassTag, classTag}
+
 case class TestData(a: Int, b: String, c: List[Double])
 
-class GithubResponsePersister(host : String, port: Int, schema: String) extends Actor {
+class GithubResponsePersister(host : String, port: Int, schema: String) extends Actor with ActorLogging {
 
   val languageCollectionName = "language" 
   val repositoryCollectionName = "repository"
@@ -21,22 +24,35 @@ class GithubResponsePersister(host : String, port: Int, schema: String) extends 
 
 
   override def receive: Receive = {
+    case Repositories(repos) =>
 
-    case res: GithubResponse =>
-      val controller = sender
-      res match {
-        case repo: Repository =>
-          val dbo = grater[Repository].asDBObject(repo)
-          repositories.insert(dbo)
-          controller ! Persisted
-        case langs: Languages =>
-          val dbo = grater[Languages].asDBObject(langs)
-          languages.insert(dbo)
-          controller ! Persisted
-        case _ =>
-          controller ! Failed
+      // TODO check empty list
+      // TODO transaction
+      val result: List[Try[WriteResult]] = repos map { repo =>
+        Try(repositories.insert(grater[Repository].asDBObject(repo)))
       }
+
+      sequence(result) match {
+        case Success(_) =>
+          sender ! Persisted
+
+        case Failure(t: Throwable) =>
+          log.error(t, "failed to serialize repository list " + repos)
+          sender ! Failed
+      }
+
+    case langs: Languages =>
+      val dbo = grater[Languages].asDBObject(langs)
+      languages.insert(dbo)
+      sender ! Persisted
+
+    case _ =>
+      sender ! GithubResponsePersister.Failed
   }
+
+
+  def sequence[A](xs: Seq[Try[A]]) =
+    Try(xs.map(_.get))
 }
 
 object GithubResponsePersister {

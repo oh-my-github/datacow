@@ -32,12 +32,17 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
   "should persist Repository to the repository collection" in {
     val persister = createPersister
 
-    val repo = Repository(
+    val repo1 = Repository(
       "2015-09-07T22:50:08.699+09:00",
       "1ambda", "scala", "1ambda/scala", false, false,
       "2015-09-08", "2015-09-08", "2015-09-09", 10L, 1L, 2L)
 
-    persister ! repo
+    val repo2 = Repository(
+      "2015-09-07T22:50:08.699+09:00",
+      "1ambda", "scala", "1ambda/haskell", false, false,
+      "2015-09-08", "2015-09-08", "2015-09-09", 10L, 1L, 2L)
+
+    persister ! Repositories(List(repo1, repo2))
     expectMsgPF(10 seconds) {
       case Persisted => ()
     }
@@ -62,8 +67,10 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
 
   "should return Failed when given an undefined GithubResponse" in {
     val persister = createPersister
+
     val emptyRate = Rate(1, 1, 1L)
     persister ! APIRateLimit(Resources(emptyRate, emptyRate), emptyRate)
+
     expectMsgPF(10 seconds) {
       case GithubResponsePersister.Failed => ()
     }

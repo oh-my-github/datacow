@@ -5,10 +5,11 @@ version := "1.0"
 scalaVersion := "2.11.7"
 
 val akkaVersion = "2.4-M3"
-val scalazVersion = "7.1.3"
+val scalazVersion = "7.2.0-M3"
 val sprayVersion = "1.3.3"
 val json4sVersion = "3.2.10"
 val salatVersion = "1.9.9"
+val scalazContribVersion = "0.2"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka"       %% "akka-actor"                       % akkaVersion     % "compile",
@@ -25,7 +26,7 @@ libraryDependencies ++= Seq(
   "io.spray"                %% "spray-client"                     % sprayVersion    % "compile",
   "io.spray"                %% "spray-json"                       % "1.3.2"         % "compile",
   "org.slf4j"               %  "slf4j-log4j12"                    % "1.7.12"        % "compile",
-  "com.github.nscala-time"  %% "nscala-time"                      % "2.2.0"         % "compile",
+  "com.chuusai"             %% "shapeless"                        % "2.2.5"         % "compile",
 
   "org.scalatest"           %% "scalatest"                        % "3.0.0-M7"      % "test",
   "de.flapdoodle.embed"     % "de.flapdoodle.embed.mongo"         % "1.50.0"        % "test",
