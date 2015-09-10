@@ -9,9 +9,6 @@ import omg.datacow.github.response.GithubResponse._
 import omg.datacow.github.response.GithubResponsePersister._
 
 import scala.util._
-import scala.reflect.{ClassTag, classTag}
-
-case class TestData(a: Int, b: String, c: List[Double])
 
 class GithubResponsePersister(host : String, port: Int, schema: String) extends Actor with ActorLogging {
 

@@ -2,22 +2,29 @@ package omg.datacow.github
 
 import akka.actor.ActorSystem
 import akka.testkit._
-import omg.datacow.github.request.GetAPIRateLimit
+import com.typesafe.config.ConfigFactory
+import omg.datacow.github.request.{GithubCredential, GetAPIRateLimit}
+import omg.datacow.github.response.APIRateLimit
 import org.scalatest._
+
+import scala.concurrent.duration._
 
 class GithubControllerSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender 
   with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
-  
+
+  val conf = ConfigFactory.load
+  val testCredential = GithubCredential(
+    conf.getString("github.id"),
+    conf.getString("github.token"))
+
   def this() = this(ActorSystem("ControllerSpec"))
 
   override def afterAll() = {
     TestKit.shutdownActorSystem(system)
   }
 
-  // 1. GetApiRateLimit 를 받으면 GithubRequestSender 로 전달해야 함
-  // 2. ApiRateLimit 메세지를 Sender 로 부터 받으면 GithubResponseProcessor 로 전달해야함
-  "controller should pass GithubRequest Message to GithubRequestSende" in {
+  "controller should persiste List[Repository] when given a GetUserRepositories message" in {
     val controller = TestActorRef[GithubController]
   }
 

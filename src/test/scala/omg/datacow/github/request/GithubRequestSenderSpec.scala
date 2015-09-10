@@ -43,12 +43,16 @@ class GithubRequestSenderSpec(_system: ActorSystem)
   "sender should return a Repository list when given a GetUserRepositories" in {
     val requestSender = TestActorRef[GithubRequestSender]
     requestSender ! GetUserRepositories("1ambda", testCredential)
-    expectMsgType[List[Repository]](10 seconds)
+    expectMsgPF(10 seconds) {
+      case Repositories(_) => ()
+    }
   }
 
   "sender should return Languages case class when given a GetRepositoryLanguages" in {
     val requestSender = TestActorRef[GithubRequestSender]
     requestSender ! GetRepositoryLanguages("1ambda", "scala", testCredential)
-    expectMsgType[Languages](10 seconds)
+    expectMsgPF(10 seconds) {
+      case Languages(_, _, _, _) => ()
+    }
   }
 }
