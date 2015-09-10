@@ -3,13 +3,13 @@ package omg.datacow.github
 import akka.actor.SupervisorStrategy.Restart
 import akka.actor._
 import akka.actor.Actor.Receive
-import omg.datacow.github.request.{GithubRequest, GithubRequestSenderRouter, GithubRequestSender}
-import omg.datacow.github.response.GithubResponse
+import omg.datacow.github.request._
+import omg.datacow.github.response._
 
 class GithubController extends Actor with ActorLogging {
 
-  var requestRouter = createRequestRouter
-//  val persistenceRouter =
+  var requestRouter     = createRequestRouter
+  val persistenceRouter = createPersistenceRouter
 
   override val supervisorStrategy = OneForOneStrategy() {
     case _ => Restart
@@ -17,12 +17,11 @@ class GithubController extends Actor with ActorLogging {
 
   override def receive: Receive = {
     case message: GithubRequest =>
-      log.debug("sad")
       requestRouter ! message
     case message: GithubResponse =>
-
+      persistenceRouter ! message
   }
 
   def createRequestRouter: ActorRef = context.actorOf(Props[GithubRequestSenderRouter])
-//  def createPersistenceRouter: ActorRef = context.actorOf(Props[GithubResponsePersisterRouter])
+  def createPersistenceRouter: ActorRef = context.actorOf(Props[GithubResponsePersisterRouter])
 }

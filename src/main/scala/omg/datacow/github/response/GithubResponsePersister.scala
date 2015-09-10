@@ -12,9 +12,6 @@ import scala.util._
 
 class GithubResponsePersister(host : String, port: Int, schema: String) extends Actor with ActorLogging {
 
-  val languageCollectionName = "language" 
-  val repositoryCollectionName = "repository"
-  
   lazy val conn: MongoClient = MongoClient(host, port)
   lazy val languages: MongoCollection = conn(schema)(languageCollectionName)
   lazy val repositories: MongoCollection =  conn(schema)(repositoryCollectionName)
@@ -53,6 +50,9 @@ class GithubResponsePersister(host : String, port: Int, schema: String) extends 
 }
 
 object GithubResponsePersister {
+  val languageCollectionName = "language"
+  val repositoryCollectionName = "repository"
+
   sealed trait PersisterEvent
   case object Persisted extends PersisterEvent
   case object Failed extends PersisterEvent
