@@ -1,8 +1,3 @@
-github {
-    token=none
-    id = "github-id"
-}
-
 akka {
     loglevel = DEBUG
     # log-config-on-start = on

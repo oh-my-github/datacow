@@ -4,6 +4,7 @@ import akka.actor.ActorSystem
 import akka.testkit._
 import com.typesafe.config.ConfigFactory
 import omg.datacow.github.response._
+import omg.datacow.util.TestUtility
 import org.scalatest._
 import scala.concurrent.duration._
 
@@ -14,9 +15,7 @@ class GithubRequestSenderSpec(_system: ActorSystem)
   def this() = this(ActorSystem("GithubRequestSender"))
 
   val conf = ConfigFactory.load
-  val testCredential = GithubCredential(
-    conf.getString("github.id"),
-    conf.getString("github.token"))
+  val testCredential = TestUtility.getTestCredential
 
   override def afterAll() = {
     TestKit.shutdownActorSystem(system)

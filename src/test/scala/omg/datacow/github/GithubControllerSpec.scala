@@ -18,12 +18,8 @@ class GithubControllerSpec(_system: ActorSystem)
   with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
 
   val conf = ConfigFactory.load
-  val testCredential = GithubCredential(
-    conf.getString("github.id"),
-    conf.getString("github.token"))
 
-//  lazy val conn = MongoUtil.getTestEnvMongoSchema
-  lazy val conn = MongoUtil.getProductionEnvMongoSchema
+  lazy val conn = MongoUtil.getTestEnvMongoSchema
   lazy val languages: MongoCollection = conn(languageCollectionName)
   lazy val repositories: MongoCollection =  conn(repositoryCollectionName)
 

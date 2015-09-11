@@ -10,20 +10,17 @@ import scala.concurrent.duration._
 
 object DataCowApp extends App {
 
-  val conf = ConfigFactory.load
-  val token = conf.getString("github.token")
-  val id = conf.getString("github.id")
+  val token = sys.env("GITHUB_TOKEN")
+  val id = sys.env("GITHUB_ID")
+  val credential = GithubCredential(id, token)
 
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(3 seconds)
 
   val controller = system.actorOf(Props[GithubController], name="controller")
-
-  val credential = GithubCredential(id, token)
-
   controller ! GetAPIRateLimit(credential)
   controller ! GetUserRepositories("1ambda", credential)
-//  controller ! GetRepositoryLanguages("1ambda", "scala", credential)
+  controller ! GetRepositoryLanguages("1ambda", "scala", credential)
 }
 
 
