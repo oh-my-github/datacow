@@ -1,6 +1,6 @@
 package omg.datacow.github
 
-import akka.actor.ActorSystem
+import akka.actor.{Props, ActorSystem}
 import akka.testkit._
 import com.mongodb.casbah.commons.MongoDBObject
 import com.mongodb.casbah.{MongoCollection, MongoClient}
@@ -35,7 +35,7 @@ class GithubControllerSpec(_system: ActorSystem)
   }
 
   "controller should return Persisted message when given a Languages case class" in {
-    val controller = TestActorRef[GithubController]
+    val controller = createTestController
     val langs = Languages(
       "2015-09-07T22:50:08.699+09:00", "1ambda", "scala",
       List(
@@ -47,12 +47,11 @@ class GithubControllerSpec(_system: ActorSystem)
     controller ! langs
     expectMsgPF(10 seconds) {
       case Persisted => ()
-      case _ => fail()
     }
   }
 
   "controller should return Persisted message when given a Repositories case class" in {
-    val controller = TestActorRef[GithubController]
+    val controller = createTestController
 
     val repo1 = Repository(
       "2015-09-07T22:50:08.699+09:00",
@@ -67,7 +66,14 @@ class GithubControllerSpec(_system: ActorSystem)
     controller ! Repositories(List(repo1, repo2))
     expectMsgPF(10 seconds) {
       case Persisted => ()
-      case _ => ()
     }
+  }
+  
+  def createTestController =  {
+    val mongoHost = conf.getString("mongo.test.host")
+    val mongoPort = conf.getInt("mongo.test.port")
+    val mongoSchema = conf.getString("mongo.test.db")
+
+    TestActorRef(Props(new GithubController(mongoHost, mongoPort, mongoSchema)))
   }
 }

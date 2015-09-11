@@ -8,12 +8,8 @@ import omg.datacow.github.request._
 import omg.datacow.github.response.GithubResponsePersister.{PersisterEvent, Failed, Persisted}
 import omg.datacow.github.response._
 
-class GithubController extends Actor with ActorLogging {
-
-  val conf = ConfigFactory.load
-  val mongoHost = conf.getString("mongo.production.host")
-  val mongoPort = conf.getInt("mongo.production.port")
-  val mongoSchema = conf.getString("mongo.production.db")
+class GithubController(mongoHost: String, mongoPort: Int, mongoSchema: String)
+  extends Actor with ActorLogging {
 
   var requestRouter     = createRequestRouter
   val persistenceRouter = createPersistenceRouter
