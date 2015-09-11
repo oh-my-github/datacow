@@ -3,6 +3,7 @@ package omg.datacow
 import akka.actor.{ActorSystem, Props}
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
+import omg.datacow.github.GithubController
 import omg.datacow.github.request._
 
 import scala.concurrent.duration._
@@ -16,13 +17,13 @@ object DataCowApp extends App {
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(3 seconds)
 
-  val sender = system.actorOf(Props[GithubRequestSender], name="sender")
+  val controller = system.actorOf(Props[GithubController], name="controller")
 
   val credential = GithubCredential(id, token)
 
-  sender ! GetAPIRateLimit(credential)
-  sender ! GetUserRepositories("1ambda", credential)
-  sender ! GetRepositoryLanguages("1ambda", "scala", credential)
+  controller ! GetAPIRateLimit(credential)
+  controller ! GetUserRepositories("1ambda", credential)
+//  controller ! GetRepositoryLanguages("1ambda", "scala", credential)
 }
 
 

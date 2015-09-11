@@ -39,7 +39,8 @@ class GithubRequestSender extends Actor with ActorLogging {
       res.onComplete {
         case Success(response) =>
           parseGithubResponse(req, response) match {
-            case Success(parsed) =>  controller ! parsed
+            case Success(parsed) =>
+              controller ! parsed
             case Failure(t) =>
               log.error(t, s"failed to parse $response")
               controller ! ParsingFailed

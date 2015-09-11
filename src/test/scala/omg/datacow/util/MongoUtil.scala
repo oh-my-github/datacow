@@ -14,9 +14,6 @@ object MongoUtil {
   import de.flapdoodle.embed.process.runtime._
 
   val conf = ConfigFactory.load
-  val mongoHost = conf.getString("mongo.test.host")
-  val mongoPort = conf.getInt("mongo.test.port")
-
   lazy val localhostIPv6 = Network.localhostIsIPv6()
   lazy val processOutput = new ProcessOutput(
     Processors.named("[mongod>]", new NullProcessor),
@@ -42,7 +39,7 @@ object MongoUtil {
   val version = Version.Main.PRODUCTION
   lazy val mongodConfig = new MongodConfigBuilder()
     .version(version)
-    .net(new Net(mongoPort, localhostIPv6))
+    .net(new Net(conf.getInt("mongo.test.port"), localhostIPv6))
     .cmdOptions(
       new MongoCmdOptionsBuilder()
         .syncDelay(1)
@@ -73,10 +70,10 @@ object MongoUtil {
     conn(mongoSchema)
   }
 
-  def getLocalEnvMongoSchema = {
-    val mongoHost = conf.getString("mongo.local.host")
-    val mongoPort = conf.getInt("mongo.local.port")
-    val mongoSchema = conf.getString("mongo.local.db")
+  def getProductionEnvMongoSchema = {
+    val mongoHost = conf.getString("mongo.production.host")
+    val mongoPort = conf.getInt("mongo.production.port")
+    val mongoSchema = conf.getString("mongo.production.db")
     lazy val conn = MongoClient(mongoHost, mongoPort)
     conn(mongoSchema)
   }

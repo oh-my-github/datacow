@@ -12,11 +12,15 @@
 
 # DONE
 
+## Day 9
+
+- fix CI failure 
+- read user profile from mongodb
+
 ## Day 8
 
-- routing
-- List[repository] bug
-- read user profile from mongodb
+- ~~routing~~
+- ~~List[repository] bug~~
 
 ## Day 7
 

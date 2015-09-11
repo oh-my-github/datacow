@@ -10,12 +10,14 @@ import omg.datacow.github.response.GithubResponsePersister._
 
 import scala.util._
 
-class GithubResponsePersister(host : String, port: Int, schema: String) extends Actor with ActorLogging {
+class GithubResponsePersister(host : String, port: Int, schema: String)
+  extends Actor with ActorLogging {
 
-  lazy val conn: MongoClient = MongoClient(host, port)
-  lazy val languages: MongoCollection = conn(schema)(languageCollectionName)
-  lazy val repositories: MongoCollection =  conn(schema)(repositoryCollectionName)
+  implicit val writeConcern = WriteConcern.JournalSafe
 
+  val conn: MongoClient = MongoClient(host, port)
+  val languages: MongoCollection = conn(schema)(languageCollectionName)
+  val repositories: MongoCollection =  conn(schema)(repositoryCollectionName)
 
   override def receive: Receive = {
     case Repositories(repos) =>
@@ -40,10 +42,10 @@ class GithubResponsePersister(host : String, port: Int, schema: String) extends 
       languages.insert(dbo)
       sender ! Persisted
 
-    case _ =>
+    case message =>
+      log.debug(message.toString)
       sender ! GithubResponsePersister.Failed
   }
-
 
   def sequence[A](xs: Seq[Try[A]]) =
     Try(xs.map(_.get))

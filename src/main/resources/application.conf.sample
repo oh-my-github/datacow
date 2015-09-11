@@ -12,18 +12,12 @@ mongo {
     test {
         host = "localhost"
         port = 29017
-        db = "ohmygithub-dev"
-    }
-
-    local {
-        host = "localhost"
-        port = 27017
-        db = "ohmygithub-dev"
+        db = "omg-test"
     }
 
     production {
         host = "localhost"
         port = 27017
-        db = "ohmygithub-dev"
+        db = "omg-production"
     }
 }

@@ -20,9 +20,9 @@ final case class Repository(dateAsISOString: String,
                             owner: String, name: String, url: String,
                             isPrivate: Boolean, isForked: Boolean,
                             createdAt: String, updatedAt: String, pushedAt: String,
-                            stargazersCount: Long, watchersCount: Long, forksCount: Long) extends GithubResponse
+                            stargazersCount: Long, watchersCount: Long, forksCount: Long)
 
-final case class Repositories(repos: List[Repository]) // avoid to type erasure
+final case class Repositories(repos: List[Repository]) extends GithubResponse // avoid to type erasure
 
 final case class Language(name: String, line: Long)
 final case class Languages(dateAsISOString: String,

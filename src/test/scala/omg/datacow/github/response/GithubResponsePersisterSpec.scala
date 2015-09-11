@@ -14,7 +14,7 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
   with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
 
-  def this() = this(ActorSystem("GithubResponseProcessorSpec"))
+  def this() = this(ActorSystem("GithubResponsePersisterSpec"))
 
   override def beforeAll: Unit = {
     MongoUtil.initialize
