@@ -12,10 +12,15 @@
 
 # DONE
 
+## Day 10
+
+- design user profile case class
+- create user if not exists otherwise update it.
+- read user profile from mongodb
+
 ## Day 9
 
-- fix CI failure 
-- read user profile from mongodb
+- ~~fix CI failure~~ 
 
 ## Day 8
 
