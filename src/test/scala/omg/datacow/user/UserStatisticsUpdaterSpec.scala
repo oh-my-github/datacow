@@ -9,7 +9,7 @@ import com.novus.salat._
 import com.novus.salat.global._
 
 class UserStatisticsUpdaterSpec extends FunSuite with Matchers with BeforeAndAfterEach {
-  import UserFixtures._
+  import UserFixture._
 
   val conf = ConfigFactory.load
   lazy val conn = MongoUtil.getTestEnvMongoSchema

@@ -8,7 +8,7 @@ import omg.datacow.util.MongoUtil
 import org.scalatest._
 
 class UserSpec extends FunSuite with Matchers with BeforeAndAfterEach {
-  import UserSpec._
+  import UserFixture._
 
   val conf = ConfigFactory.load
   lazy val conn = MongoUtil.getTestEnvMongoSchema
@@ -30,7 +30,7 @@ class UserSpec extends FunSuite with Matchers with BeforeAndAfterEach {
   }
 }
 
-object UserSpec {
+object UserFixture {
 
   val user1 = UserProfile(
     "104919591",

@@ -5,6 +5,7 @@ import akka.testkit._
 import com.typesafe.config.ConfigFactory
 import omg.datacow.github.response.GithubResponse._
 import omg.datacow.github.response.GithubResponsePersister._
+import omg.datacow.persistent.MongoConfig
 import omg.datacow.util.MongoUtil
 import org.scalatest._
 
@@ -74,11 +75,12 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
 
   def createPersister = {
     val conf = ConfigFactory.load
-    val mongoHost = conf.getString("mongo.test.host")
-    val mongoPort = conf.getInt("mongo.test.port")
-    val mongoSchema = conf.getString("mongo.test.db")
+    val host = conf.getString("mongo.test.host")
+    val port = conf.getInt("mongo.test.port")
+    val schema = conf.getString("mongo.test.db")
+    val config = MongoConfig(host, port, schema)
 
-    TestActorRef(Props(new GithubResponsePersister(mongoHost, mongoPort, mongoSchema)))
+    TestActorRef(Props(new GithubResponsePersister(config)))
   }
 }
 

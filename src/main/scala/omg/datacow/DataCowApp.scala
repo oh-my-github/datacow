@@ -5,6 +5,7 @@ import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
 import omg.datacow.github.GithubController
 import omg.datacow.github.request._
+import omg.datacow.persistent.MongoConfig
 
 import scala.concurrent.duration._
 
@@ -17,13 +18,12 @@ object DataCowApp extends App {
   val mongoHost = conf.getString("mongo.production.host")
   val mongoPort = conf.getInt("mongo.production.port")
   val mongoSchema = conf.getString("mongo.production.db")
+  val mongoConfig = MongoConfig(mongoHost, mongoPort, mongoSchema)
 
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(3 seconds)
 
-  val controller = system.actorOf(Props(
-    new GithubController(mongoHost, mongoPort, mongoSchema)),
-    name="controller")
+  val controller = system.actorOf(Props( new GithubController(mongoConfig)))
   controller ! GetAPIRateLimit(credential)
   controller ! GetUserRepositories("1ambda", credential)
   controller ! GetRepositoryLanguages("1ambda", "scala", credential)

@@ -7,9 +7,9 @@ import com.typesafe.config.ConfigFactory
 import omg.datacow.github.request._
 import omg.datacow.github.response.GithubResponsePersister.{PersisterEvent, Failed, Persisted}
 import omg.datacow.github.response._
+import omg.datacow.persistent.MongoConfig
 
-class GithubController(mongoHost: String, mongoPort: Int, mongoSchema: String)
-  extends Actor with ActorLogging {
+class GithubController(mongoConfig: MongoConfig) extends Actor with ActorLogging {
 
   var requestRouter     = createRequestRouter
   val persistenceRouter = createPersistenceRouter
@@ -39,5 +39,6 @@ class GithubController(mongoHost: String, mongoPort: Int, mongoSchema: String)
     context.actorOf(Props[GithubRequestSenderRouter])
 
   def createPersistenceRouter: ActorRef =
-    context.actorOf(Props(new GithubResponsePersisterRouter(mongoHost, mongoPort, mongoSchema)))
+    context.actorOf(Props(
+      new GithubResponsePersisterRouter(mongoConfig)))
 }
