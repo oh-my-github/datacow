@@ -12,7 +12,7 @@ class UserSpec extends FunSuite with Matchers with BeforeAndAfterEach {
 
   val conf = ConfigFactory.load
   lazy val conn = MongoUtil.getTestEnvMongoSchema
-  lazy val users = conn(User.userCollectionName)
+  lazy val users = conn(UserProfile.userCollectionName)
 
   override def beforeEach = {
     MongoUtil.initialize
@@ -21,10 +21,10 @@ class UserSpec extends FunSuite with Matchers with BeforeAndAfterEach {
   override def afterEach = { MongoUtil.stop }
 
   test("journaled user can be converted back to scala User") {
-    val dbo = grater[User].asDBObject(user1)
+    val dbo = grater[UserProfile].asDBObject(user1)
     users.insert(dbo)
     val user = users.findOne(MongoDBObject("id" -> user1.id)).get
-    val scalao = grater[User].asObject(user)
+    val scalao = grater[UserProfile].asObject(user)
 
     scalao shouldBe user1
   }
@@ -32,7 +32,7 @@ class UserSpec extends FunSuite with Matchers with BeforeAndAfterEach {
 
 object UserSpec {
 
-  val user1 = User(
+  val user1 = UserProfile(
     "104919591",
     "1ambda",
     GithubProfile(
@@ -51,7 +51,7 @@ object UserSpec {
     )
   )
 
-  val user2 = User(
+  val user2 = UserProfile(
     "104919591",
     "1ambda",
     GithubProfile(
