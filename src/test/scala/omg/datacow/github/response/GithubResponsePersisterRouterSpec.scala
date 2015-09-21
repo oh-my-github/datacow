@@ -1,6 +1,7 @@
 package omg.datacow.github.response
 
 import omg.datacow.github.response.GithubResponsePersister.Persisted
+import omg.datacow.persistent.MongoConfig
 import omg.datacow.util.MongoUtil
 
 import scala.concurrent.duration._
@@ -46,9 +47,10 @@ class GithubResponsePersisterRouterSpec(_system: ActorSystem)
   }
 
   def createPersistenceRouter = {
-    val mongoHost = conf.getString("mongo.test.host")
-    val mongoPort = conf.getInt("mongo.test.port")
-    val mongoSchema = conf.getString("mongo.test.db")
-    TestActorRef(Props(new GithubResponsePersisterRouter(mongoHost, mongoPort, mongoSchema)))
+    val host = conf.getString("mongo.test.host")
+    val port = conf.getInt("mongo.test.port")
+    val schema = conf.getString("mongo.test.db")
+    val config = MongoConfig(host, port, schema)
+    TestActorRef(Props(new GithubResponsePersisterRouter(config)))
   }
 }

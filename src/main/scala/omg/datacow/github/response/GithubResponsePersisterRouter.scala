@@ -2,13 +2,14 @@ package omg.datacow.github.response
 
 import akka.actor._
 import akka.routing._
+import omg.datacow.persistent.MongoConfig
 
-class GithubResponsePersisterRouter(host: String, port: Int, schema: String)
-  extends Actor with ActorLogging {
+class GithubResponsePersisterRouter(mongoConfig: MongoConfig) extends Actor with ActorLogging {
 
    var router = {
      val routees = Vector.fill(5) {
-       val r = context.actorOf(Props(new GithubResponsePersister(host, port, schema)))
+       val r = context.actorOf(Props(
+         new GithubResponsePersister(mongoConfig)))
        context watch r
        ActorRefRoutee(r)
      }
@@ -19,7 +20,8 @@ class GithubResponsePersisterRouter(host: String, port: Int, schema: String)
    override def receive: Actor.Receive = {
      case Terminated(child) =>
        router = router.removeRoutee(child)
-       val r = context.actorOf(Props(new GithubResponsePersister(host, port, schema)))
+       val r = context.actorOf(Props(
+         new GithubResponsePersister(mongoConfig)))
        context watch r
        router = router.addRoutee(r)
      case message: GithubResponse =>

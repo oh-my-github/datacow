@@ -7,6 +7,7 @@ import com.mongodb.casbah.{MongoCollection, MongoClient}
 import com.typesafe.config.ConfigFactory
 import omg.datacow.github.request._
 import omg.datacow.github.response._
+import omg.datacow.persistent.MongoConfig
 import omg.datacow.util.MongoUtil
 import org.scalatest._
 import omg.datacow.github.response.GithubResponsePersister._
@@ -72,7 +73,8 @@ class GithubControllerSpec(_system: ActorSystem)
     val mongoHost = conf.getString("mongo.test.host")
     val mongoPort = conf.getInt("mongo.test.port")
     val mongoSchema = conf.getString("mongo.test.db")
+    val mongoConfig = MongoConfig(mongoHost, mongoPort, mongoSchema)
 
-    TestActorRef(Props(new GithubController(mongoHost, mongoPort, mongoSchema)))
+    TestActorRef(Props(new GithubController(mongoConfig)))
   }
 }
