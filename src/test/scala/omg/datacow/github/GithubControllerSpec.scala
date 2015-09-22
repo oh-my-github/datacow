@@ -70,11 +70,7 @@ class GithubControllerSpec(_system: ActorSystem)
   }
   
   def createTestController =  {
-    val mongoHost = conf.getString("mongo.test.host")
-    val mongoPort = conf.getInt("mongo.test.port")
-    val mongoSchema = conf.getString("mongo.test.db")
-    val mongoConfig = MongoConfig(mongoHost, mongoPort, mongoSchema)
-
+    val mongoConfig = MongoUtil.getTestMongoConfig
     TestActorRef(Props(new GithubController(mongoConfig)))
   }
 }

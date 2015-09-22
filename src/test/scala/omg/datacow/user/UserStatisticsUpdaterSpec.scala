@@ -1,7 +1,7 @@
 package omg.datacow.user
 
 import com.typesafe.config.ConfigFactory
-import omg.datacow.util.MongoUtil
+import omg.datacow.util.{UserProfileFixture, MongoUtil}
 import org.scalatest._
 
 import com.mongodb.casbah.Imports._
@@ -9,7 +9,7 @@ import com.novus.salat._
 import com.novus.salat.global._
 
 class UserStatisticsUpdaterSpec extends FunSuite with Matchers with BeforeAndAfterEach {
-  import UserFixture._
+  import UserProfileFixture._
 
   val conf = ConfigFactory.load
   lazy val conn = MongoUtil.getTestEnvMongoSchema
@@ -18,7 +18,7 @@ class UserStatisticsUpdaterSpec extends FunSuite with Matchers with BeforeAndAft
   override def beforeEach = { MongoUtil.initialize }
   override def afterEach = { MongoUtil.stop }
 
-  test("update user profile if exists") {
+  test("update user repo if outdated") {
     // user1 and user2 have the same UserProfile.id
     val user1Dbo = grater[UserProfile].asDBObject(user1)
     users.insert(user1Dbo)
@@ -28,12 +28,13 @@ class UserStatisticsUpdaterSpec extends FunSuite with Matchers with BeforeAndAft
 
     // exists
     foundUser1 shouldBe user1
+  }
 
-
+  test("insert user repo if not exists") {
 
   }
 
-  test("insert new user profile if not exists") {
+  test("do nothing if user repo exists and already it was updated") {
 
   }
 }
