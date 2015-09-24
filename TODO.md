@@ -15,7 +15,6 @@
 ## Day 10
 
 - ~~design user profile case class~~
-- read user profile from mongodb
 - add user statistics update scheduler
 
 ## Day 9

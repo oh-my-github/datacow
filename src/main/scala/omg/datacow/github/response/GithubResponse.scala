@@ -16,7 +16,7 @@ sealed case class Resources(core: Rate, search: Rate)
 sealed case class Rate(limit: Int, remaining: Int, reset: Long)
 final case class APIRateLimit(resources: Resources, rate: Rate) extends GithubResponse
 
-final case class Repository(dateAsISOString: String,
+final case class Repository(collectedAt: DateTime,
                             owner: String, name: String, url: String,
                             isPrivate: Boolean, isForked: Boolean,
                             createdAt: String, updatedAt: String, pushedAt: String,
@@ -25,7 +25,7 @@ final case class Repository(dateAsISOString: String,
 final case class Repositories(repos: List[Repository]) extends GithubResponse // avoid to type erasure
 
 final case class Language(name: String, line: Long)
-final case class Languages(dateAsISOString: String,
+final case class Languages(collectedAt: DateTime,
                            owner: String, repositoryName: String,
                            languages: List[Language]) extends GithubResponse
 
@@ -52,7 +52,7 @@ object GithubResponse {
             }
 
             Repository(
-              getCurrentDateTimeAsISOStirng, owner, name, url,
+              getCurrentDateTimeAsISOString, owner, name, url,
               isForked, isPrivate, createdAt, updatedAt, pushedAt,
               stargazersCount.toLong, watchersCount.toLong, forksCount.toLong
             )
@@ -76,9 +76,8 @@ object GithubResponse {
   }
 
 
-  def getCurrentDateTimeAsISOStirng: String = {
-    val fmt = ISODateTimeFormat.dateTime
-    fmt.print(DateTime.now)
+  def getCurrentDateTimeAsISOString: DateTime = {
+    DateTime.now
   }
 
   def parseGithubResponse(request: GithubRequest, response: String) = {
@@ -91,7 +90,7 @@ object GithubResponse {
           Repositories(response.parseJson.convertTo[List[Repository]])
         case GetRepositoryLanguages(owner, repository, _) =>
           val langList = response.parseJson.convertTo[List[Language]]
-          Languages(GithubResponse.getCurrentDateTimeAsISOStirng, owner, repository, langList)
+          Languages(GithubResponse.getCurrentDateTimeAsISOString, owner, repository, langList)
       }
     }
   }

@@ -17,6 +17,9 @@ class GithubResponsePersisterRouterSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
   with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
 
+  import com.mongodb.casbah.commons.conversions.scala._
+  RegisterJodaTimeConversionHelpers()
+
   import omg.datacow.util.UserStatFixture._
   import MongoUtil._
 

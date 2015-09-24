@@ -85,4 +85,11 @@ object MongoUtil {
     lazy val conn = MongoClient(mongoHost, mongoPort)
     conn(mongoSchema)
   }
+
+  def getProductionMongoConfig = {
+    val host = conf.getString("mongo.production.host")
+    val port = conf.getInt("mongo.production.port")
+    val schema = conf.getString("mongo.production.db")
+    MongoConfig(host, port, schema)
+  }
 }

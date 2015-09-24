@@ -7,7 +7,7 @@ import com.typesafe.config.ConfigFactory
 import omg.datacow.util.{UserProfileFixture, MongoUtil}
 import org.scalatest._
 
-class UserSpec extends FunSuite with Matchers with BeforeAndAfterEach {
+class UserProfileSpec extends FunSuite with Matchers with BeforeAndAfterEach {
   import UserProfileFixture._
 
   val conf = ConfigFactory.load
