@@ -45,7 +45,6 @@ class GithubResponsePersister(mongoConfig: MongoConfig) extends Actor with Actor
       sender ! Persisted
 
     case message =>
-      log.debug(message.toString)
       sender ! GithubResponsePersister.Failed
   }
 

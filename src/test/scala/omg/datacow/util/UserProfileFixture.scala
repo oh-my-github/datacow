@@ -66,9 +66,9 @@ object UserProfileFixture {
     |{
     | "id": "104019591",
     | "name": "1ambda", /* github.login */
-    | "github": {
+    | "githubProfile": {
     |   "id" "4959181" /* github.id"
-    |   "name": "1ambda", /* github.login */
+    |   "login": "1ambda", /* github.login */
     |   "email": "1amb4a@gmail",
     |   "accessToken": ${sys.env("GITHUB_ACCESS_TOKEN")},
     |   "refreshToken": "0041lalfpa",
@@ -81,5 +81,4 @@ object UserProfileFixture {
     |   "location": "Seoul"
     | }
   """.stripMargin
-
 }

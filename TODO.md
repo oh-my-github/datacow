@@ -12,16 +12,21 @@
 
 # DONE
 
+## Day 12
+
+- supervisor strategy, logging receive
+* reactive monitoring
+
 ## Day 11
 
 - GithubProfile -> convert to DateTime type
 - updater logging
-- updater non-breaking validation
+- updater, persister, request-sender non-breaking validation
 
 ## Day 10
 
 - ~~design user profile case class~~
-- add user statistics update scheduler
+- ~~add user statistics update scheduler~~
 
 ## Day 9
 

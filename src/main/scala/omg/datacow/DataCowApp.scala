@@ -23,10 +23,7 @@ object DataCowApp extends App {
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(3 seconds)
 
-  val controller = system.actorOf(Props( new GithubController(mongoConfig)))
-  controller ! GetAPIRateLimit(credential)
-  controller ! GetUserRepositories("1ambda", credential)
-  controller ! GetRepositoryLanguages("1ambda", "scala", credential)
+  val controller = system.actorOf(Props(new GithubController(mongoConfig)))
 }
 
 

@@ -18,13 +18,13 @@ import com.mongodb.casbah.Imports._
 import com.novus.salat._
 import com.novus.salat.global._
 
-class UserStatisticsUpdaterSpec(_system: ActorSystem)
+class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender 
   with WordSpecLike with Matchers with BeforeAndAfterEach with BeforeAndAfterAll {
 
   import UserProfileFixture._
   import omg.datacow.util.UserStatFixture._
-  import UserStatisticsUpdater._
+  import UserStatisticsUpdateScheduler._
   import GithubResponsePersister._
 
   import com.mongodb.casbah.commons.conversions.scala._
@@ -125,13 +125,13 @@ class UserStatisticsUpdaterSpec(_system: ActorSystem)
     userColl.insert(user1Dbo)
     userColl.insert(user2Dbo)
 
-    val e = UserStatisticsUpdater.getUserProfiles(userColl)
+    val e = UserStatisticsUpdateScheduler.getUserProfiles(userColl)
     e.isRight shouldBe true
     (e getOrElse Nil) shouldBe List(user1, user2)
   }
 
   "getUserProfiles should return Nil when profiles doesn't exist" in {
-    val e = UserStatisticsUpdater.getUserProfiles(userColl)
+    val e = UserStatisticsUpdateScheduler.getUserProfiles(userColl)
     e.isRight shouldBe true
     (e getOrElse "empty" ) shouldBe Nil
   }
@@ -139,7 +139,7 @@ class UserStatisticsUpdaterSpec(_system: ActorSystem)
   "getUserProfiles should return failure when an exception occurred" in {
     userColl.insert(lang1Dbo)
 
-    val e = UserStatisticsUpdater.getUserProfiles(userColl)
+    val e = UserStatisticsUpdateScheduler.getUserProfiles(userColl)
     e.isLeft shouldBe true
   }
 
@@ -168,7 +168,7 @@ class UserStatisticsUpdaterSpec(_system: ActorSystem)
 
 
   def createUpdater(controller: ActorRef, config: MongoConfig): ActorRef = {
-    system.actorOf(Props(new UserStatisticsUpdater(controller, config)))
+    system.actorOf(Props(new UserStatisticsUpdateScheduler(controller, config)))
   }
 
 }

@@ -16,8 +16,8 @@ import scala.util.{Try, Success, Failure}
 import scalaz._
 import Scalaz._
 
-class UserStatisticsUpdater(controller: ActorRef, config: MongoConfig) extends Actor with ActorLogging {
-  import UserStatisticsUpdater._
+class UserStatisticsUpdateScheduler(controller: ActorRef, config: MongoConfig) extends Actor with ActorLogging {
+  import UserStatisticsUpdateScheduler._
   import GithubResponsePersister._
 
   import context.dispatcher
@@ -29,7 +29,6 @@ class UserStatisticsUpdater(controller: ActorRef, config: MongoConfig) extends A
 
   override def receive: Receive = {
     case RetrieveUserAccessToken =>
-
       getUserProfiles(userColl) map { userProfiles =>
         userProfiles foreach { u =>
           /* send GetUserRepositories event */
@@ -49,7 +48,7 @@ class UserStatisticsUpdater(controller: ActorRef, config: MongoConfig) extends A
   }
 }
 
-object UserStatisticsUpdater {
+object UserStatisticsUpdateScheduler {
   sealed trait UpdaterCommand
   sealed trait UpdaterEvent
 
