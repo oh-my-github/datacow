@@ -2,17 +2,18 @@ package omg.datacow.github
 
 import akka.actor.{Props, ActorSystem}
 import akka.testkit._
-import com.mongodb.casbah.commons.MongoDBObject
-import com.mongodb.casbah.{MongoCollection, MongoClient}
-import com.typesafe.config.ConfigFactory
-import omg.datacow.github.request._
-import omg.datacow.github.response._
-import omg.datacow.persistent.MongoConfig
-import omg.datacow.util.MongoUtil
 import org.scalatest._
+
+import com.mongodb.casbah._
+import com.typesafe.config.ConfigFactory
+
+import omg.datacow.github.response._
+import omg.datacow.util.MongoUtil
 import omg.datacow.github.response.GithubResponsePersister._
 
+import com.github.nscala_time.time.Imports.DateTime
 import scala.concurrent.duration._
+
 
 class GithubControllerSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
@@ -37,7 +38,7 @@ class GithubControllerSpec(_system: ActorSystem)
   "controller should return Persisted message when given a Languages case class" in {
     val controller = createTestController
     val langs = Languages(
-      "2015-09-07T22:50:08.699+09:00", "1ambda", "scala",
+      DateTime.now, "1ambda", "scala",
       List(
         Language("scala", 30114),
         Language("haskell", 20104),
@@ -54,12 +55,12 @@ class GithubControllerSpec(_system: ActorSystem)
     val controller = createTestController
 
     val repo1 = Repository(
-      "2015-09-07T22:50:08.699+09:00",
+      DateTime.now,
       "1ambda", "scala", "1ambda/scala", false, false,
       "2015-09-08", "2015-09-08", "2015-09-09", 10L, 1L, 2L)
 
     val repo2 = Repository(
-      "2015-09-07T22:50:08.699+09:00",
+      DateTime.now,
       "1ambda", "scala", "1ambda/haskell", false, false,
       "2015-09-08", "2015-09-08", "2015-09-09", 10L, 1L, 2L)
 
@@ -70,11 +71,7 @@ class GithubControllerSpec(_system: ActorSystem)
   }
   
   def createTestController =  {
-    val mongoHost = conf.getString("mongo.test.host")
-    val mongoPort = conf.getInt("mongo.test.port")
-    val mongoSchema = conf.getString("mongo.test.db")
-    val mongoConfig = MongoConfig(mongoHost, mongoPort, mongoSchema)
-
+    val mongoConfig = MongoUtil.getTestMongoConfig
     TestActorRef(Props(new GithubController(mongoConfig)))
   }
 }

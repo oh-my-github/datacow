@@ -8,14 +8,14 @@ case class UserProfile(
 
 case class GithubProfile(
   id:            String, /* github.id */
-  name:          String, /* github.login */
+  login:         String, /* github.login */
   email:         String,
   accessToken:   String,
   refreshToken:  String,
   following:     Long,
   followers:     Long,
   createdAt:     String,
-  lastUpdatedAt: String,
+  updatedAt:     String,
   blog:          Option[String],
   company:       Option[String],
   location:      Option[String]

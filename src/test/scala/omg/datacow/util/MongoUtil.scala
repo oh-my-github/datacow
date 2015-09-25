@@ -2,6 +2,7 @@ package omg.datacow.util
 
 import com.mongodb.casbah.MongoClient
 import com.typesafe.config.ConfigFactory
+import omg.datacow.persistent.MongoConfig
 
 object MongoUtil {
   import de.flapdoodle.embed.mongo._
@@ -25,7 +26,7 @@ object MongoUtil {
 
   lazy val runtimeConfig = new RuntimeConfigBuilder()
     .defaults(command)
-    //    .processOutput(processOutput)
+        .processOutput(processOutput)
     .artifactStore(
       new ExtractedArtifactStoreBuilder()
         .defaults(command)
@@ -70,11 +71,25 @@ object MongoUtil {
     conn(mongoSchema)
   }
 
+  def getTestMongoConfig = {
+    val host = conf.getString("mongo.test.host")
+    val port = conf.getInt("mongo.test.port")
+    val schema = conf.getString("mongo.test.db")
+    MongoConfig(host, port, schema)
+  }
+
   def getProductionEnvMongoSchema = {
     val mongoHost = conf.getString("mongo.production.host")
     val mongoPort = conf.getInt("mongo.production.port")
     val mongoSchema = conf.getString("mongo.production.db")
     lazy val conn = MongoClient(mongoHost, mongoPort)
     conn(mongoSchema)
+  }
+
+  def getProductionMongoConfig = {
+    val host = conf.getString("mongo.production.host")
+    val port = conf.getInt("mongo.production.port")
+    val schema = conf.getString("mongo.production.db")
+    MongoConfig(host, port, schema)
   }
 }

@@ -12,6 +12,8 @@ import omg.datacow.persistent.MongoConfig
 import scala.util._
 
 class GithubResponsePersister(mongoConfig: MongoConfig) extends Actor with ActorLogging {
+  import com.mongodb.casbah.commons.conversions.scala._
+  RegisterJodaTimeConversionHelpers()
 
   implicit val writeConcern = WriteConcern.JournalSafe
 
@@ -43,7 +45,6 @@ class GithubResponsePersister(mongoConfig: MongoConfig) extends Actor with Actor
       sender ! Persisted
 
     case message =>
-      log.debug(message.toString)
       sender ! GithubResponsePersister.Failed
   }
 
