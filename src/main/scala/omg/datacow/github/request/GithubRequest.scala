@@ -17,7 +17,7 @@ trait GithubRequest {
 final case class GithubCredential(id: String, accessToken: String)
 
 final case class GetUserRepositories(owner: String,
-                                 credential: GithubCredential) extends GithubRequest {
+                                     credential: GithubCredential) extends GithubRequest {
   override def getUrl: String = s"https://api.github.com/users/$owner/repos"
   override def getCredential: GithubCredential = credential
 }

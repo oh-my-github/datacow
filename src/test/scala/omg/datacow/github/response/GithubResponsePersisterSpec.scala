@@ -31,7 +31,7 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
   "should persist Repository to the repository collection" in {
     val persister = createPersister
 
-    persister ! Repositories(List(repo1, repo2))
+    persister ! Repositories(List(repo1, repo3))
     expectMsgPF(10 seconds) {
       case Persisted => ()
     }

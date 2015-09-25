@@ -12,6 +12,12 @@
 
 # DONE
 
+## Day 11
+
+- GithubProfile -> convert to DateTime type
+- updater logging
+- updater non-breaking validation
+
 ## Day 10
 
 - ~~design user profile case class~~

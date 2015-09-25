@@ -26,7 +26,7 @@ object MongoUtil {
 
   lazy val runtimeConfig = new RuntimeConfigBuilder()
     .defaults(command)
-    //    .processOutput(processOutput)
+        .processOutput(processOutput)
     .artifactStore(
       new ExtractedArtifactStoreBuilder()
         .defaults(command)

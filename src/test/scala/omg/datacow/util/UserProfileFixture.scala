@@ -24,18 +24,37 @@ object UserProfileFixture {
   )
 
   val user2 = UserProfile(
-    "104919591",
-    "1ambda",
+    "104919592",
+    "njir",
     GithubProfile(
-      "4910051",
-      "1ambda",
-      "1ambda_at_gmail.com",
+      "4910052",
+      "jnir",
+      "njir_at_gmail.com",
       sys.env("GITHUB_ACCESS_TOKEN"),
       "",
-      50L,
-      29L,
+      23L,
+      89L,
       "2013-07-08T22:03:28Z",
-      "2015-09-10T22:03:28Z",
+      "2015-09-22T22:03:28Z",
+      None,
+      None,
+      Some("asdasd")
+    )
+  )
+
+  val user3 = UserProfile(
+    "104919593",
+    "tocology",
+    GithubProfile(
+      "4910053",
+      "tocology",
+      "tocology_at_gmail.com",
+      sys.env("GITHUB_ACCESS_TOKEN"),
+      "",
+      23L,
+      89L,
+      "2013-08-08T22:03:28Z",
+      "2015-09-21T22:03:28Z",
       None,
       None,
       Some("asdasd")

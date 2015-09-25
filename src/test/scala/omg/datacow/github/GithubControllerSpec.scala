@@ -4,16 +4,10 @@ import akka.actor.{Props, ActorSystem}
 import akka.testkit._
 import org.scalatest._
 
-
-import com.mongodb.casbah.commons.MongoDBObject
-import com.mongodb.casbah.{MongoCollection, MongoClient}
+import com.mongodb.casbah._
 import com.typesafe.config.ConfigFactory
 
-
-
-import omg.datacow.github.request._
 import omg.datacow.github.response._
-import omg.datacow.persistent.MongoConfig
 import omg.datacow.util.MongoUtil
 import omg.datacow.github.response.GithubResponsePersister._
 
