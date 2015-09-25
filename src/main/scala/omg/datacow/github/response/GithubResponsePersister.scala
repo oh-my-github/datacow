@@ -7,17 +7,19 @@ import com.novus.salat.global._
 import com.mongodb.casbah.Imports._
 import omg.datacow.github.response.GithubResponse._
 import omg.datacow.github.response.GithubResponsePersister._
+import omg.datacow.persistent.MongoConfig
 
 import scala.util._
 
-class GithubResponsePersister(host : String, port: Int, schema: String)
-  extends Actor with ActorLogging {
+class GithubResponsePersister(mongoConfig: MongoConfig) extends Actor with ActorLogging {
+  import com.mongodb.casbah.commons.conversions.scala._
+  RegisterJodaTimeConversionHelpers()
 
   implicit val writeConcern = WriteConcern.JournalSafe
 
-  val conn: MongoClient = MongoClient(host, port)
-  val languages: MongoCollection = conn(schema)(languageCollectionName)
-  val repositories: MongoCollection =  conn(schema)(repositoryCollectionName)
+  val conn: MongoClient = MongoClient(mongoConfig.host, mongoConfig.port)
+  val languages: MongoCollection = conn(mongoConfig.schema)(languageCollectionName)
+  val repositories: MongoCollection =  conn(mongoConfig.schema)(repositoryCollectionName)
 
   override def receive: Receive = {
     case Repositories(repos) =>
@@ -43,7 +45,6 @@ class GithubResponsePersister(host : String, port: Int, schema: String)
       sender ! Persisted
 
     case message =>
-      log.debug(message.toString)
       sender ! GithubResponsePersister.Failed
   }
 

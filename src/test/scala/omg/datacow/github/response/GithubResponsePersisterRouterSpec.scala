@@ -1,6 +1,7 @@
 package omg.datacow.github.response
 
 import omg.datacow.github.response.GithubResponsePersister.Persisted
+import omg.datacow.persistent.MongoConfig
 import omg.datacow.util.MongoUtil
 
 import scala.concurrent.duration._
@@ -15,6 +16,12 @@ import org.scalatest._
 class GithubResponsePersisterRouterSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
   with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
+
+  import com.mongodb.casbah.commons.conversions.scala._
+  RegisterJodaTimeConversionHelpers()
+
+  import omg.datacow.util.UserStatFixture._
+  import MongoUtil._
 
   def this() = this(ActorSystem("GithubResponsePersisterRouterSpec"))
   val conf = ConfigFactory.load
@@ -31,24 +38,14 @@ class GithubResponsePersisterRouterSpec(_system: ActorSystem)
   "PersistenceRouter should persiste GithubResponse.Languages messages" in {
     val router = createPersistenceRouter
 
-    val langs = Languages(
-      "2015-09-07T22:50:08.699+09:00", "1ambda", "scala",
-      List(
-        Language("scala", 30114),
-        Language("haskell", 20104),
-        Language("lisp", 3014)
-      ))
-
-    router ! langs
+    router ! langs1
     expectMsgPF(10 seconds) {
       case Persisted => ()
     }
   }
 
   def createPersistenceRouter = {
-    val mongoHost = conf.getString("mongo.test.host")
-    val mongoPort = conf.getInt("mongo.test.port")
-    val mongoSchema = conf.getString("mongo.test.db")
-    TestActorRef(Props(new GithubResponsePersisterRouter(mongoHost, mongoPort, mongoSchema)))
+    val mongoConfig = getTestMongoConfig
+    TestActorRef(Props(new GithubResponsePersisterRouter(mongoConfig)))
   }
 }

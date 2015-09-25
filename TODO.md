@@ -12,11 +12,21 @@
 
 # DONE
 
+## Day 12
+
+- supervisor strategy, logging receive
+* reactive monitoring
+
+## Day 11
+
+- GithubProfile -> convert to DateTime type
+- updater logging
+- updater, persister, request-sender non-breaking validation
+
 ## Day 10
 
-- design user profile case class
-- create user if not exists otherwise update it.
-- read user profile from mongodb
+- ~~design user profile case class~~
+- ~~add user statistics update scheduler~~
 
 ## Day 9
 
