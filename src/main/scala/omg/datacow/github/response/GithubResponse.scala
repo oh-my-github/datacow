@@ -19,7 +19,7 @@ final case class APIRateLimit(resources: Resources, rate: Rate) extends GithubRe
 final case class Repository(collectedAt: DateTime,
                             owner: String, name: String, url: String,
                             isPrivate: Boolean, isForked: Boolean,
-                            createdAt: String, updatedAt: String, pushedAt: String,
+                            createdAt: DateTime, updatedAt: DateTime, pushedAt: DateTime,
                             stargazersCount: Long, watchersCount: Long, forksCount: Long)
 
 final case class Repositories(repos: List[Repository]) extends GithubResponse // avoid to type erasure
@@ -53,7 +53,8 @@ object GithubResponse {
 
             Repository(
               getCurrentDateTimeAsISOString, owner, name, url,
-              isForked, isPrivate, createdAt, updatedAt, pushedAt,
+              isForked, isPrivate,
+              new DateTime(createdAt), new DateTime(updatedAt), new DateTime(pushedAt),
               stargazersCount.toLong, watchersCount.toLong, forksCount.toLong
             )
 

@@ -21,7 +21,7 @@ class GithubController(mongoConfig: MongoConfig) extends Actor with ActorLogging
   var origin: Option[ActorRef] = None
 
   context.system.scheduler.schedule(
-    60 seconds, 600 seconds,
+    10 seconds, 600 seconds,
     updateScheduler, RetrieveUserAccessToken)
 
   override val supervisorStrategy = OneForOneStrategy() {
