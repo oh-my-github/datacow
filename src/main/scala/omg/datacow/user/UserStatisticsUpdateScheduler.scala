@@ -1,31 +1,30 @@
 package omg.datacow.user
 
+import com.typesafe.config.ConfigFactory
+import omg.datacow.DataCowConfig
 import omg.datacow.github.request.{GetRepositoryLanguages, GithubCredential, GetUserRepositories}
-
-import scala.concurrent.duration._
 
 import akka.actor._
 import com.novus.salat._
 import com.novus.salat.global._
 import com.mongodb.casbah.Imports._
 
-import omg.datacow.persistent.MongoConfig
 import omg.datacow.github.response._
 
 import scala.util.{Try, Success, Failure}
 import scalaz._
 import Scalaz._
 
-class UserStatisticsUpdateScheduler(controller: ActorRef, config: MongoConfig) extends Actor with ActorLogging {
+class UserStatisticsUpdateScheduler(controller: ActorRef) extends Actor with ActorLogging {
   import UserStatisticsUpdateScheduler._
   import GithubResponsePersister._
-
   import context.dispatcher
 
-  val conn = MongoClient(config.host, config.port)
-  val userColl = conn(config.schema)(UserProfile.userCollectionName)
-  val langColl = conn(config.schema)(languageCollectionName)
-  val repoColl = conn(config.schema)(repositoryCollectionName)
+  val conn = MongoClient(DataCowConfig.getMongoURL)
+  val schema = DataCowConfig.getMongoSchema
+  val userColl = conn(schema)(UserProfile.userCollectionName)
+  val langColl = conn(schema)(languageCollectionName)
+  val repoColl = conn(schema)(repositoryCollectionName)
 
   override def receive: Receive = {
     case RetrieveUserAccessToken =>

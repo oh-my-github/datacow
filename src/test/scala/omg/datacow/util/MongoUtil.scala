@@ -2,6 +2,7 @@ package omg.datacow.util
 
 import com.mongodb.casbah.MongoClient
 import com.typesafe.config.ConfigFactory
+import omg.datacow.DataCowConfig
 import omg.datacow.persistent.MongoConfig
 
 object MongoUtil {
@@ -38,9 +39,11 @@ object MongoUtil {
     .build()
 
   val version = Version.Main.PRODUCTION
+  val testMongoPort = DataCowConfig.getMongoURL.split(":")(1)
+  println("test mongo port" +  testMongoPort)
   lazy val mongodConfig = new MongodConfigBuilder()
     .version(version)
-    .net(new Net(conf.getInt("mongo.test.port"), localhostIPv6))
+    .net(new Net(testMongoPort.toInt, localhostIPv6))
     .cmdOptions(
       new MongoCmdOptionsBuilder()
         .syncDelay(1)
@@ -63,33 +66,8 @@ object MongoUtil {
     mongodExe.stop()
   }
 
-  def getTestEnvMongoSchema = {
-    val mongoHost = conf.getString("mongo.test.host")
-    val mongoPort = conf.getInt("mongo.test.port")
-    val mongoSchema = conf.getString("mongo.test.db")
-    lazy val conn = MongoClient(mongoHost, mongoPort)
-    conn(mongoSchema)
-  }
-
-  def getTestMongoConfig = {
-    val host = conf.getString("mongo.test.host")
-    val port = conf.getInt("mongo.test.port")
-    val schema = conf.getString("mongo.test.db")
-    MongoConfig(host, port, schema)
-  }
-
-  def getProductionEnvMongoSchema = {
-    val mongoHost = conf.getString("mongo.production.host")
-    val mongoPort = conf.getInt("mongo.production.port")
-    val mongoSchema = conf.getString("mongo.production.db")
-    lazy val conn = MongoClient(mongoHost, mongoPort)
-    conn(mongoSchema)
-  }
-
-  def getProductionMongoConfig = {
-    val host = conf.getString("mongo.production.host")
-    val port = conf.getInt("mongo.production.port")
-    val schema = conf.getString("mongo.production.db")
-    MongoConfig(host, port, schema)
+  def getTestMongoConn = {
+    lazy val conn = MongoClient(DataCowConfig.getMongoURL)
+    conn(DataCowConfig.getMongoSchema)
   }
 }

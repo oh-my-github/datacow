@@ -11,7 +11,7 @@ import omg.datacow.github.response._
 import omg.datacow.persistent.MongoConfig
 import omg.datacow.user.UserStatisticsUpdateScheduler
 
-class GithubController(mongoConfig: MongoConfig) extends Actor with ActorLogging {
+class GithubController extends Actor with ActorLogging {
 
   import context.dispatcher
 
@@ -50,10 +50,9 @@ class GithubController(mongoConfig: MongoConfig) extends Actor with ActorLogging
     context.actorOf(Props[GithubRequestSenderRouter])
 
   def createPersistenceRouter: ActorRef =
-    context.actorOf(Props(
-      new GithubResponsePersisterRouter(mongoConfig)))
+    context.actorOf(Props[GithubResponsePersisterRouter])
 
   def createUserStatUpdateScheduler =
     context.actorOf(Props(
-      new UserStatisticsUpdateScheduler(self, mongoConfig)))
+      new UserStatisticsUpdateScheduler(self)))
 }

@@ -2,6 +2,7 @@ package omg.datacow.github
 
 import akka.actor.{Props, ActorSystem}
 import akka.testkit._
+import omg.datacow.DataCowConfig
 import org.scalatest._
 
 import com.mongodb.casbah._
@@ -20,7 +21,7 @@ class GithubControllerSpec(_system: ActorSystem)
   with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
 
   val conf = ConfigFactory.load
-  lazy val conn = MongoUtil.getTestEnvMongoSchema
+  lazy val conn = MongoUtil.getTestMongoConn
   lazy val languages: MongoCollection = conn(languageCollectionName)
   lazy val repositories: MongoCollection =  conn(repositoryCollectionName)
 
@@ -73,7 +74,6 @@ class GithubControllerSpec(_system: ActorSystem)
   }
   
   def createTestController =  {
-    val mongoConfig = MongoUtil.getTestMongoConfig
-    TestActorRef(Props(new GithubController(mongoConfig)))
+    TestActorRef(Props[GithubController])
   }
 }
