@@ -1,5 +1,7 @@
 package omg.datacow.user
 
+import com.github.nscala_time.time.Imports.DateTime
+
 case class UserProfile(
   id: String,
   name: String,
@@ -14,8 +16,8 @@ case class GithubProfile(
   refreshToken:  String,
   following:     Long,
   followers:     Long,
-  createdAt:     String,
-  updatedAt:     String,
+  createdAt:     DateTime,
+  updatedAt:     DateTime,
   blog:          Option[String],
   company:       Option[String],
   location:      Option[String]

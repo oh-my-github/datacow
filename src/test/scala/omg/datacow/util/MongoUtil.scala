@@ -40,7 +40,6 @@ object MongoUtil {
 
   val version = Version.Main.PRODUCTION
   val testMongoPort = DataCowConfig.getMongoURL.split(":")(1)
-  println("test mongo port" +  testMongoPort)
   lazy val mongodConfig = new MongodConfigBuilder()
     .version(version)
     .net(new Net(testMongoPort.toInt, localhostIPv6))

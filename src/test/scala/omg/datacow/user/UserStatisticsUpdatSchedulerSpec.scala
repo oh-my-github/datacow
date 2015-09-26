@@ -30,7 +30,7 @@ class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
   import com.mongodb.casbah.commons.conversions.scala._
   RegisterJodaTimeConversionHelpers()
 
-  def this() = this(ActorSystem("UserStatisticsUpdaterSystem"))
+  def this() = this(ActorSystem("UserStatisticsUpdaterSpecSystem"))
 
   val conf = ConfigFactory.load
   var conn: MongoDB = _
