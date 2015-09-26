@@ -45,7 +45,6 @@ class GithubResponsePersisterRouterSpec(_system: ActorSystem)
   }
 
   def createPersistenceRouter = {
-    val mongoConfig = getTestMongoConfig
-    TestActorRef(Props(new GithubResponsePersisterRouter(mongoConfig)))
+    TestActorRef[GithubResponsePersisterRouter]
   }
 }

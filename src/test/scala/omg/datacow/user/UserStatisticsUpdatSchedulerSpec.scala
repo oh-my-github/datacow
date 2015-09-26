@@ -30,10 +30,9 @@ class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
   import com.mongodb.casbah.commons.conversions.scala._
   RegisterJodaTimeConversionHelpers()
 
-  def this() = this(ActorSystem("UserStatisticsUpdaterSystem"))
+  def this() = this(ActorSystem("UserStatisticsUpdaterSpecSystem"))
 
   val conf = ConfigFactory.load
-  val mongoConfig = MongoUtil.getTestMongoConfig
   var conn: MongoDB = _
 
   var userColl: MongoCollection = _
@@ -42,7 +41,7 @@ class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
 
   override def beforeEach = { 
     MongoUtil.initialize
-    conn = MongoUtil.getTestEnvMongoSchema
+    conn = MongoUtil.getTestMongoConn
     userColl = conn(UserProfile.userCollectionName)
     langColl = conn(languageCollectionName)
     repoColl = conn(repositoryCollectionName)
@@ -66,7 +65,7 @@ class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
     userColl.insert(user1Dbo)
     userColl.insert(user2Dbo)
 
-    val updater = createUpdater(testActor, mongoConfig)
+    val updater = createUpdater(testActor)
     updater ! RetrieveUserAccessToken
 
     val expectedName1 = user1.name
@@ -89,7 +88,7 @@ class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
     repoColl.insert(repo1Dbo)
     repoColl.insert(repo2Dbo)
 
-    val updater = createUpdater(testActor, mongoConfig)
+    val updater = createUpdater(testActor)
     updater ! RetrieveUserAccessToken
 
     val expectedName = user1.name
@@ -115,7 +114,7 @@ class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
   }
 
   "do nothing if user collection is empty" in {
-    val updater = createUpdater(testActor, mongoConfig)
+    val updater = createUpdater(testActor)
     updater ! RetrieveUserAccessToken
 
     expectNoMsg(2 seconds)
@@ -167,8 +166,8 @@ class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
   }
 
 
-  def createUpdater(controller: ActorRef, config: MongoConfig): ActorRef = {
-    system.actorOf(Props(new UserStatisticsUpdateScheduler(controller, config)))
+  def createUpdater(controller: ActorRef): ActorRef = {
+    system.actorOf(Props(new UserStatisticsUpdateScheduler(controller)))
   }
 
 }

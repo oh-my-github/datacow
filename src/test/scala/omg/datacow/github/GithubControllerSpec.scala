@@ -2,6 +2,7 @@ package omg.datacow.github
 
 import akka.actor.{Props, ActorSystem}
 import akka.testkit._
+import omg.datacow.DataCowConfig
 import org.scalatest._
 
 import com.mongodb.casbah._
@@ -20,7 +21,7 @@ class GithubControllerSpec(_system: ActorSystem)
   with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
 
   val conf = ConfigFactory.load
-  lazy val conn = MongoUtil.getTestEnvMongoSchema
+  lazy val conn = MongoUtil.getTestMongoConn
   lazy val languages: MongoCollection = conn(languageCollectionName)
   lazy val repositories: MongoCollection =  conn(repositoryCollectionName)
 
@@ -57,12 +58,14 @@ class GithubControllerSpec(_system: ActorSystem)
     val repo1 = Repository(
       DateTime.now,
       "1ambda", "scala", "1ambda/scala", false, false,
-      "2015-09-08", "2015-09-08", "2015-09-09", 10L, 1L, 2L)
+      new DateTime("2015-09-08"), new DateTime("2015-09-08"), new DateTime("2015-09-09"),
+      10L, 1L, 2L)
 
     val repo2 = Repository(
       DateTime.now,
       "1ambda", "scala", "1ambda/haskell", false, false,
-      "2015-09-08", "2015-09-08", "2015-09-09", 10L, 1L, 2L)
+      new DateTime("2015-09-08"), new DateTime("2015-09-08"), new DateTime("2015-09-09"),
+      10L, 1L, 2L)
 
     controller ! Repositories(List(repo1, repo2))
     expectMsgPF(10 seconds) {
@@ -71,7 +74,6 @@ class GithubControllerSpec(_system: ActorSystem)
   }
   
   def createTestController =  {
-    val mongoConfig = MongoUtil.getTestMongoConfig
-    TestActorRef(Props(new GithubController(mongoConfig)))
+    TestActorRef(Props[GithubController])
   }
 }

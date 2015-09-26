@@ -1,6 +1,7 @@
 package omg.datacow.util
 
-import omg.datacow.user.{GithubProfile, UserProfile}
+import omg.datacow.user._
+import com.github.nscala_time.time.Imports.DateTime
 
 object UserProfileFixture {
 
@@ -15,8 +16,8 @@ object UserProfileFixture {
       "",
       49L,
       29L,
-      "2013-07-08T22:03:28Z",
-      "2015-09-09T22:03:28Z",
+      new DateTime("2013-07-08T22:03:28Z"),
+      new DateTime("2015-09-09T22:03:28Z"),
       None,
       None,
       Some("asdasd")
@@ -34,8 +35,8 @@ object UserProfileFixture {
       "",
       23L,
       89L,
-      "2013-07-08T22:03:28Z",
-      "2015-09-22T22:03:28Z",
+      new DateTime("2013-07-08T22:03:28Z"),
+      new DateTime("2015-09-22T22:03:28Z"),
       None,
       None,
       Some("asdasd")
@@ -53,8 +54,8 @@ object UserProfileFixture {
       "",
       23L,
       89L,
-      "2013-08-08T22:03:28Z",
-      "2015-09-21T22:03:28Z",
+      new DateTime("2013-08-08T22:03:28Z"),
+      new DateTime("2015-09-21T22:03:28Z"),
       None,
       None,
       Some("asdasd")

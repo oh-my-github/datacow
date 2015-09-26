@@ -58,8 +58,7 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
   }
 
   def createPersister = {
-    val mongoConfig = MongoUtil.getTestMongoConfig
-    TestActorRef(Props(new GithubResponsePersister(mongoConfig)))
+    TestActorRef(Props[GithubResponsePersister])
   }
 }
 
