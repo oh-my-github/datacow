@@ -6,10 +6,18 @@ import com.github.nscala_time.time.Imports._
 import org.joda.time.Days
 import org.joda.time.format._
 
+import com.novus.salat._
+import com.novus.salat.dao._
+import com.novus.salat.global._
+import com.novus.salat.annotations._
+
+import com.mongodb.casbah.MongoConnection
+import com.mongodb.casbah.Imports._
+
 import scala.util.Try
 
 import omg.datacow.github.request._
-
+import omg.datacow.DataCowConfig._
 
 trait GithubResponse
 sealed case class Resources(core: Rate, search: Rate)
@@ -28,6 +36,7 @@ final case class Language(name: String, line: Long)
 final case class Languages(collectedAt: DateTime,
                            owner: String, repositoryName: String,
                            languages: List[Language]) extends GithubResponse
+
 
 object GithubResponse {
   case object ParsingFailed
