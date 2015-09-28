@@ -6,7 +6,7 @@ akka {
 
 env {
     TEST {
-        mongoURL = "localhost:29017"
+        mongoURL = "localhost:27017"
         mongoSchema = "omg-datacow-test"
     }
 

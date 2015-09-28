@@ -18,7 +18,7 @@ import com.mongodb.casbah.Imports._
 import com.novus.salat._
 import com.novus.salat.global._
 
-class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
+class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender 
   with WordSpecLike with Matchers with BeforeAndAfterEach with BeforeAndAfterAll {
 
