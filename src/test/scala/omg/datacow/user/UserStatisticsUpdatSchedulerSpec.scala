@@ -22,8 +22,7 @@ class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender 
   with WordSpecLike with Matchers with BeforeAndAfterEach with BeforeAndAfterAll {
 
-  import UserProfileFixture._
-  import omg.datacow.util.UserStatFixture._
+  import omg.datacow.util.Fixtures._
   import UserStatisticsUpdateScheduler._
 
   import com.mongodb.casbah.commons.conversions.scala._

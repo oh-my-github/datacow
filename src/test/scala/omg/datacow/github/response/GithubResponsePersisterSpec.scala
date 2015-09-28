@@ -14,7 +14,7 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
   with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfterEach {
 
-  import omg.datacow.util.UserStatFixture._
+  import omg.datacow.util.Fixtures._
 
   def this() = this(ActorSystem("GithubResponsePersisterSpec"))
 

@@ -19,7 +19,7 @@ class GithubResponsePersisterRouterSpec(_system: ActorSystem)
   import com.mongodb.casbah.commons.conversions.scala._
   RegisterJodaTimeConversionHelpers()
 
-  import omg.datacow.util.UserStatFixture._
+  import omg.datacow.util.Fixtures._
 
   def this() = this(ActorSystem("GithubResponsePersisterRouterSpec"))
   val conf = ConfigFactory.load

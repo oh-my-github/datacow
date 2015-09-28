@@ -30,7 +30,7 @@ object MongoUtils {
 
 object UserProfileDAO
   extends SalatDAO[UserProfile, ObjectId](collection = MongoUtils.getUserCollection)
-object LanguageDAO
+object LanguagesDAO
   extends SalatDAO[Languages, ObjectId](collection   = MongoUtils.getLanguageCollection)
 object RepositoryDAO
   extends SalatDAO[Repository, ObjectId](collection  = MongoUtils.getRepositoryCollection)

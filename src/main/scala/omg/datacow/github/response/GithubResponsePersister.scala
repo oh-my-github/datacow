@@ -1,12 +1,9 @@
 package omg.datacow.github.response
 
 import akka.actor.{ActorLogging, Actor}
-import akka.actor.Actor.Receive
 import com.novus.salat._
 import com.novus.salat.global._
 import com.mongodb.casbah.Imports._
-import omg.datacow.DataCowConfig
-import omg.datacow.github.response.GithubResponse._
 import omg.datacow.github.response.GithubResponsePersister._
 import omg.datacow.persistent.MongoUtils
 
