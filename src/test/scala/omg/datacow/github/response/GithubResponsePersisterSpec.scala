@@ -5,27 +5,22 @@ import akka.testkit._
 import com.typesafe.config.ConfigFactory
 import omg.datacow.github.response.GithubResponse._
 import omg.datacow.github.response.GithubResponsePersister._
-import omg.datacow.util.MongoUtil
+import omg.datacow.util.TestEnvMongoUtil
 import org.scalatest._
 
 import scala.concurrent.duration._
 
 class GithubResponsePersisterSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
-  with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
+  with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfterEach {
 
   import omg.datacow.util.UserStatFixture._
 
   def this() = this(ActorSystem("GithubResponsePersisterSpec"))
 
-  override def beforeAll: Unit = {
-    MongoUtil.initialize
-  }
-
-  override def afterAll: Unit = {
-    TestKit.shutdownActorSystem(system)
-    MongoUtil.stop
-  }
+  override def beforeEach: Unit = { TestEnvMongoUtil.initialize }
+  override def afterEach: Unit = { TestEnvMongoUtil.stop }
+  override def afterAll: Unit = { TestKit.shutdownActorSystem(system) }
 
   "should persist Repository to the repository collection" in {
     val persister = createPersister

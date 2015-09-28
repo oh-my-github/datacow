@@ -1,39 +1,37 @@
 package omg.datacow.github
 
-import akka.actor.{Props, ActorSystem}
+import akka.actor._
 import akka.testkit._
-import omg.datacow.DataCowConfig
 import org.scalatest._
 
-import com.mongodb.casbah._
-import com.typesafe.config.ConfigFactory
-
 import omg.datacow.github.response._
-import omg.datacow.util.MongoUtil
+import omg.datacow.util.TestEnvMongoUtil
 import omg.datacow.github.response.GithubResponsePersister._
+import omg.datacow.persistent.MongoUtils
 
-import com.github.nscala_time.time.Imports.DateTime
 import scala.concurrent.duration._
-
+import com.github.nscala_time.time.Imports.DateTime
+import com.mongodb.casbah._
 
 class GithubControllerSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
-  with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
+  with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfterEach {
 
-  val conf = ConfigFactory.load
-  lazy val conn = MongoUtil.getTestMongoConn
-  lazy val languages: MongoCollection = conn(languageCollectionName)
-  lazy val repositories: MongoCollection =  conn(repositoryCollectionName)
+  lazy val languages: MongoCollection    = MongoUtils.getLanguageCollection
+  lazy val repositories: MongoCollection = MongoUtils.getRepositoryCollection
 
   def this() = this(ActorSystem("ControllerSpec"))
 
-  override def beforeAll() = {
-    MongoUtil.initialize
+  override def beforeEach() = {
+    TestEnvMongoUtil.initialize
+  }
+
+  override def afterEach() = {
+    TestEnvMongoUtil.stop
   }
 
   override def afterAll() = {
     TestKit.shutdownActorSystem(system)
-    MongoUtil.stop
   }
 
   "controller should return Persisted message when given a Languages case class" in {

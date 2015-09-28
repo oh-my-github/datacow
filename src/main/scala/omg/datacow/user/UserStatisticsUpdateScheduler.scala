@@ -10,6 +10,7 @@ import com.novus.salat.global._
 import com.mongodb.casbah.Imports._
 
 import omg.datacow.github.response._
+import omg.datacow.persistent.MongoUtils
 
 import scala.util.{Try, Success, Failure}
 import scalaz._
@@ -17,14 +18,11 @@ import Scalaz._
 
 class UserStatisticsUpdateScheduler(controller: ActorRef) extends Actor with ActorLogging {
   import UserStatisticsUpdateScheduler._
-  import GithubResponsePersister._
   import context.dispatcher
 
-  val conn = MongoClient(DataCowConfig.getMongoURL)
-  val schema = DataCowConfig.getMongoSchema
-  val userColl = conn(schema)(UserProfile.userCollectionName)
-  val langColl = conn(schema)(languageCollectionName)
-  val repoColl = conn(schema)(repositoryCollectionName)
+  val userColl = MongoUtils.getUserCollection
+  val langColl = MongoUtils.getLanguageCollection
+  val repoColl = MongoUtils.getRepositoryCollection
 
   override def receive: Receive = {
     case RetrieveUserAccessToken =>

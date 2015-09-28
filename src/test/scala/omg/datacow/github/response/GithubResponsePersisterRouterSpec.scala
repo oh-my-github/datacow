@@ -1,7 +1,7 @@
 package omg.datacow.github.response
 
 import omg.datacow.github.response.GithubResponsePersister.Persisted
-import omg.datacow.util.MongoUtil
+import omg.datacow.util.TestEnvMongoUtil
 
 import scala.concurrent.duration._
 
@@ -14,25 +14,19 @@ import org.scalatest._
 
 class GithubResponsePersisterRouterSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
-  with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfter {
+  with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfterEach {
 
   import com.mongodb.casbah.commons.conversions.scala._
   RegisterJodaTimeConversionHelpers()
 
   import omg.datacow.util.UserStatFixture._
-  import MongoUtil._
 
   def this() = this(ActorSystem("GithubResponsePersisterRouterSpec"))
   val conf = ConfigFactory.load
 
-  override def beforeAll() = {
-    MongoUtil.initialize
-  }
-
-  override def afterAll() = {
-    TestKit.shutdownActorSystem(system)
-    MongoUtil.stop
-  }
+  override def beforeEach() = { TestEnvMongoUtil.initialize }
+  override def afterEach() = { TestEnvMongoUtil.stop }
+  override def afterAll() = { TestKit.shutdownActorSystem(system) }
 
   "PersistenceRouter should persiste GithubResponse.Languages messages" in {
     val router = createPersistenceRouter

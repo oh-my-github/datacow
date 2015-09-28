@@ -3,8 +3,9 @@ package omg.datacow.util
 import com.mongodb.casbah.MongoClient
 import com.typesafe.config.ConfigFactory
 import omg.datacow.DataCowConfig
+import omg.datacow.persistent.MongoUtils
 
-object MongoUtil {
+object TestEnvMongoUtil {
   import de.flapdoodle.embed.mongo._
   import de.flapdoodle.embed.mongo.config._
   import de.flapdoodle.embed.mongo.distribution._
@@ -38,7 +39,7 @@ object MongoUtil {
     .build()
 
   val version = Version.Main.PRODUCTION
-  val testMongoPort = DataCowConfig.getMongoURL.split(":")(1)
+  val testMongoPort = MongoUtils.getMongoURL.split(":")(1)
   lazy val mongodConfig = new MongodConfigBuilder()
     .version(version)
     .net(new Net(testMongoPort.toInt, localhostIPv6))
@@ -62,10 +63,5 @@ object MongoUtil {
   def stop = {
     mongod.stop()
     mongodExe.stop()
-  }
-
-  def getTestMongoConn = {
-    lazy val conn = MongoClient(DataCowConfig.getMongoURL)
-    conn(DataCowConfig.getMongoSchema)
   }
 }

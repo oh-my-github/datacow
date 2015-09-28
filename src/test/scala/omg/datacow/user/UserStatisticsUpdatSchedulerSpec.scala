@@ -1,6 +1,7 @@
 package omg.datacow.user
 
 import omg.datacow.github.request.{GetRepositoryLanguages, GithubCredential, GetUserRepositories}
+import omg.datacow.persistent.MongoUtils
 
 import scala.concurrent.duration._
 import akka.actor._
@@ -24,7 +25,6 @@ class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
   import UserProfileFixture._
   import omg.datacow.util.UserStatFixture._
   import UserStatisticsUpdateScheduler._
-  import GithubResponsePersister._
 
   import com.mongodb.casbah.commons.conversions.scala._
   RegisterJodaTimeConversionHelpers()
@@ -39,13 +39,12 @@ class UserStatisticsUpdatSchedulerSpec(_system: ActorSystem)
   var repoColl: MongoCollection = _
 
   override def beforeEach = { 
-    MongoUtil.initialize
-    conn = MongoUtil.getTestMongoConn
-    userColl = conn(UserProfile.userCollectionName)
-    langColl = conn(languageCollectionName)
-    repoColl = conn(repositoryCollectionName)
+    TestEnvMongoUtil.initialize
+    userColl = MongoUtils.getUserCollection
+    langColl = MongoUtils.getLanguageCollection
+    repoColl = MongoUtils.getRepositoryCollection
   }
-  override def afterEach = { MongoUtil.stop }
+  override def afterEach = { TestEnvMongoUtil.stop }
   
   override def afterAll(): Unit = {
     TestKit.shutdownActorSystem(system)

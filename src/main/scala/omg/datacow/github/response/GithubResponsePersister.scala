@@ -8,6 +8,7 @@ import com.mongodb.casbah.Imports._
 import omg.datacow.DataCowConfig
 import omg.datacow.github.response.GithubResponse._
 import omg.datacow.github.response.GithubResponsePersister._
+import omg.datacow.persistent.MongoUtils
 
 import scala.util._
 
@@ -17,10 +18,8 @@ class GithubResponsePersister extends Actor with ActorLogging {
 
   implicit val writeConcern = WriteConcern.JournalSafe
 
-  val conn: MongoClient = MongoClient(DataCowConfig.getMongoURL)
-  val schema: String = DataCowConfig.getMongoSchema
-  val languages: MongoCollection = conn(schema)(languageCollectionName)
-  val repositories: MongoCollection =  conn(schema)(repositoryCollectionName)
+  val languages    = MongoUtils.getLanguageCollection
+  val repositories = MongoUtils.getRepositoryCollection
 
   override def receive: Receive = {
     case Repositories(repos) =>
@@ -54,9 +53,6 @@ class GithubResponsePersister extends Actor with ActorLogging {
 }
 
 object GithubResponsePersister {
-  val languageCollectionName = "language"
-  val repositoryCollectionName = "repository"
-
   sealed trait PersisterEvent
   case object Persisted extends PersisterEvent
   case object Failed extends PersisterEvent

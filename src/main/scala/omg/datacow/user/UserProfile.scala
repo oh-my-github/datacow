@@ -1,9 +1,14 @@
 package omg.datacow.user
 
 import com.github.nscala_time.time.Imports.DateTime
-
+import com.novus.salat._
+import com.novus.salat.dao._
+import com.novus.salat.global._
 import com.novus.salat.annotations._
+
+import com.mongodb.casbah.MongoConnection
 import com.mongodb.casbah.Imports._
+import omg.datacow.DataCowConfig
 
 case class UserProfile(
   _id: ObjectId = new ObjectId,
@@ -27,6 +32,6 @@ case class GithubProfile(
 )
 
 object UserProfile {
-  val userCollectionName = "users"
 }
+
 

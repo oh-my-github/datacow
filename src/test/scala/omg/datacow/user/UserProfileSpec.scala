@@ -4,29 +4,27 @@ import com.mongodb.casbah.Imports._
 import com.novus.salat._
 import com.novus.salat.global._
 import com.typesafe.config.ConfigFactory
-import omg.datacow.util.{UserProfileFixture, MongoUtil}
+import omg.datacow.DataCowConfig
+import omg.datacow.persistent.{UserProfileDAO, MongoUtils}
+import omg.datacow.util.{UserProfileFixture, TestEnvMongoUtil}
 import org.scalatest._
 
 class UserProfileSpec extends FunSuite with Matchers with BeforeAndAfterEach {
   import UserProfileFixture._
 
-  val conf = ConfigFactory.load
-  lazy val conn = MongoUtil.getTestMongoConn
-  lazy val users = conn(UserProfile.userCollectionName)
+  lazy val users = MongoUtils.getUserCollection
 
   override def beforeEach = {
-    MongoUtil.initialize
+    TestEnvMongoUtil.initialize
   }
 
-  override def afterEach = { MongoUtil.stop }
+  override def afterEach = { TestEnvMongoUtil.stop }
 
   test("persisted dbo user can be converted back to scala User") {
-    val dbo = grater[UserProfile].asDBObject(user1)
-    users.insert(dbo)
-    val user = users.findOne(MongoDBObject("_id" -> user1._id)).get
-    val scalao = grater[UserProfile].asObject(user)
+    UserProfileDAO.insert(user1)
+    val found =  UserProfileDAO.findOneById(id = user1._id).get
 
-    scalao shouldBe user1
+    found shouldBe user1
   }
 }
 
