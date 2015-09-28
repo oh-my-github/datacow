@@ -1,22 +1,19 @@
 package omg.datacow.user
 
-import omg.datacow.github.request.{GetRepositoryLanguages, GithubCredential, GetUserRepositories}
-import omg.datacow.persistent.MongoUtils
-
-import scala.concurrent.duration._
-import akka.actor._
-import akka.testkit._
-
-import com.typesafe.config.ConfigFactory
-
+import omg.datacow.github.request._
 import omg.datacow.github.response._
+import omg.datacow.persistent._
 import omg.datacow.util._
 
+import akka.actor._
+import akka.testkit._
+import com.typesafe.config.ConfigFactory
 import org.scalatest._
+import scala.concurrent.duration._
 
-import com.mongodb.casbah.Imports._
 import com.novus.salat._
 import com.novus.salat.global._
+import com.mongodb.casbah.Imports._
 
 class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender 
@@ -24,43 +21,20 @@ class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
 
   import omg.datacow.util.Fixtures._
   import UserStatisticsUpdateScheduler._
-
+  import MongoUtils._
   import com.mongodb.casbah.commons.conversions.scala._
   RegisterJodaTimeConversionHelpers()
 
   def this() = this(ActorSystem("UserStatisticsUpdaterSpecSystem"))
 
   val conf = ConfigFactory.load
-  var conn: MongoDB = _
 
-  var userColl: MongoCollection = _
-  var langColl: MongoCollection = _
-  var repoColl: MongoCollection = _
-
-  override def beforeEach = { 
-    TestEnvMongoUtil.initialize
-    userColl = MongoUtils.getUserCollection
-    langColl = MongoUtils.getLanguageCollection
-    repoColl = MongoUtils.getRepositoryCollection
-  }
-  override def afterEach = { TestEnvMongoUtil.stop }
-  
-  override def afterAll(): Unit = {
-    TestKit.shutdownActorSystem(system)
-  }
-
-  val user1Dbo = grater[UserProfile].asDBObject(user1)
-  val user2Dbo = grater[UserProfile].asDBObject(user2)
-  val user3Dbo = grater[UserProfile].asDBObject(user3)
-  val lang1Dbo = grater[Languages].asDBObject(langs1)
-  val lang2Dbo = grater[Languages].asDBObject(langs2)
-  val repo1Dbo = grater[Repository].asDBObject(repo1)
-  val repo2Dbo = grater[Repository].asDBObject(repo2)
-  val repo3Dbo = grater[Repository].asDBObject(repo3)
+  override def beforeEach = { TestEnvMongoUtil.dropDatabase }
+  override def afterAll = { TestKit.shutdownActorSystem(system) }
 
   "reply GetUserRepositories if repos not exist" in {
-    userColl.insert(user1Dbo)
-    userColl.insert(user2Dbo)
+    UserProfileDAO.insert(user1)
+    UserProfileDAO.insert(user2)
 
     val updater = createUpdater(testActor)
     updater ! RetrieveUserAccessToken
@@ -81,9 +55,9 @@ class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
   }
 
   "reply GetUserRepositories and GetRepositoryLanguages if the user has repos" in {
-    userColl.insert(user1Dbo)
-    repoColl.insert(repo1Dbo)
-    repoColl.insert(repo2Dbo)
+    UserProfileDAO.insert(user1)
+    RepositoryDAO.insert(repo1)
+    RepositoryDAO.insert(repo2)
 
     val updater = createUpdater(testActor)
     updater ! RetrieveUserAccessToken
@@ -118,42 +92,35 @@ class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
   }
 
   "getUserProfiles should return List[UserProfile] when user profiles exist" in {
-    userColl.insert(user1Dbo)
-    userColl.insert(user2Dbo)
+    UserProfileDAO.insert(user1)
+    UserProfileDAO.insert(user2)
 
-    val e = UserStatisticsUpdateScheduler.getUserProfiles(userColl)
+    val e = UserStatisticsUpdateScheduler.getUserProfiles()
     e.isRight shouldBe true
     (e getOrElse Nil) shouldBe List(user1, user2)
   }
 
   "getUserProfiles should return Nil when profiles doesn't exist" in {
-    val e = UserStatisticsUpdateScheduler.getUserProfiles(userColl)
+    val e = UserStatisticsUpdateScheduler.getUserProfiles()
     e.isRight shouldBe true
     (e getOrElse "empty" ) shouldBe Nil
   }
 
-  "getUserProfiles should return failure when an exception occurred" in {
-    userColl.insert(lang1Dbo)
-
-    val e = UserStatisticsUpdateScheduler.getUserProfiles(userColl)
-    e.isLeft shouldBe true
-  }
-
   "getUserRepositories should return List[Repository] when the given user have repos" in {
-    userColl.insert(user1Dbo)
-    repoColl.insert(repo1Dbo)
-    repoColl.insert(repo2Dbo)
+    UserProfileDAO.insert(user1)
+    RepositoryDAO.insert(repo1)
+    RepositoryDAO.insert(repo2)
 
-    val reposEither = getUserRepositories(user1, repoColl)
+    val reposEither = getUserRepositories(user1)
 
     reposEither.isRight shouldBe true
     (reposEither getOrElse Nil) shouldBe List(repo1, repo2)
   }
 
   "getUserRepositories should return Nil when the given user have no repo" in {
-    userColl.insert(user3Dbo)
+    UserProfileDAO.insert(user3)
 
-    val reposEither = getUserRepositories(user3, repoColl)
+    val reposEither = getUserRepositories(user3)
 
     reposEither map { repos =>
       repos shouldBe Nil

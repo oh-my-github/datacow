@@ -17,22 +17,10 @@ class GithubControllerSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
   with WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfterEach {
 
-  lazy val languages: MongoCollection    = MongoUtils.getLanguageCollection
-  lazy val repositories: MongoCollection = MongoUtils.getRepositoryCollection
-
   def this() = this(ActorSystem("ControllerSpec"))
 
-  override def beforeEach() = {
-    TestEnvMongoUtil.initialize
-  }
-
-  override def afterEach() = {
-    TestEnvMongoUtil.stop
-  }
-
-  override def afterAll() = {
-    TestKit.shutdownActorSystem(system)
-  }
+  override def beforeEach = { TestEnvMongoUtil.dropDatabase }
+  override def afterAll = { TestKit.shutdownActorSystem(system) }
 
   "controller should return Persisted message when given a Languages case class" in {
     val controller = createTestController

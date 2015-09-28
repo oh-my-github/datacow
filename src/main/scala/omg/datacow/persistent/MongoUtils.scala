@@ -22,16 +22,17 @@ object MongoUtils {
   val repositoryCollectionName = "repository"
 
   def getMongoURL    = conf.getString(s"env.${appEnv}.mongoURL")
-  def getMongoSchema = conf.getString(s"env.${appEnv}.mongoSchema")
-  def getUserCollection = MongoClient(getMongoURL)(getMongoSchema)(userCollectionName)
-  def getLanguageCollection = MongoClient(getMongoURL)(getMongoSchema)(languageCollectionName)
-  def getRepositoryCollection = MongoClient(getMongoURL)(getMongoSchema)(repositoryCollectionName)
+  def mongoSchema = conf.getString(s"env.${appEnv}.mongoSchema")
+  def userColl = MongoClient(getMongoURL)(mongoSchema)(userCollectionName)
+  def langColl = MongoClient(getMongoURL)(mongoSchema)(languageCollectionName)
+  def repoColl = MongoClient(getMongoURL)(mongoSchema)(repositoryCollectionName)
+
+  object UserProfileDAO
+    extends SalatDAO[UserProfile, ObjectId](collection = MongoUtils.userColl)
+  object LanguagesDAO
+    extends SalatDAO[Languages, ObjectId](collection   = MongoUtils.langColl)
+  object RepositoryDAO
+    extends SalatDAO[Repository, ObjectId](collection  = MongoUtils.repoColl)
 }
 
-object UserProfileDAO
-  extends SalatDAO[UserProfile, ObjectId](collection = MongoUtils.getUserCollection)
-object LanguagesDAO
-  extends SalatDAO[Languages, ObjectId](collection   = MongoUtils.getLanguageCollection)
-object RepositoryDAO
-  extends SalatDAO[Repository, ObjectId](collection  = MongoUtils.getRepositoryCollection)
 

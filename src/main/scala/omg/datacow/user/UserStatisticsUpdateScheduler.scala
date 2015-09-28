@@ -1,8 +1,6 @@
 package omg.datacow.user
 
-import com.typesafe.config.ConfigFactory
-import omg.datacow.DataCowConfig
-import omg.datacow.github.request.{GetRepositoryLanguages, GithubCredential, GetUserRepositories}
+import omg.datacow.github.request._
 
 import akka.actor._
 import com.novus.salat._
@@ -10,7 +8,7 @@ import com.novus.salat.global._
 import com.mongodb.casbah.Imports._
 
 import omg.datacow.github.response._
-import omg.datacow.persistent.MongoUtils
+import omg.datacow.persistent._
 
 import scala.util.{Try, Success, Failure}
 import scalaz._
@@ -20,20 +18,16 @@ class UserStatisticsUpdateScheduler(controller: ActorRef) extends Actor with Act
   import UserStatisticsUpdateScheduler._
   import context.dispatcher
 
-  val userColl = MongoUtils.getUserCollection
-  val langColl = MongoUtils.getLanguageCollection
-  val repoColl = MongoUtils.getRepositoryCollection
-
   override def receive: Receive = {
     case RetrieveUserAccessToken =>
-      getUserProfiles(userColl) map { userProfiles =>
+      getUserProfiles() map { userProfiles =>
         userProfiles foreach { u =>
           /* send GetUserRepositories event */
           val credential = GithubCredential(u.name, u.githubProfile.accessToken)
           controller ! GetUserRepositories(u.name, credential)
 
           /* send GetRepositoryLanguages event */
-          getUserRepositories(u, repoColl) map { repos =>
+          getUserRepositories(u) map { repos =>
             for {
               r <- repos
             } yield {
@@ -49,14 +43,14 @@ object UserStatisticsUpdateScheduler {
   sealed trait UpdaterCommand
   sealed trait UpdaterEvent
 
+  import MongoUtils._
+
   case object RetrieveUserAccessToken extends UpdaterCommand
 
-  def getUserProfiles(userColl: MongoCollection): \/[String, List[UserProfile]] = {
+  def getUserProfiles(): \/[String, List[UserProfile]] = {
     Try {
-      for {
-      // TODO toStream
-        dbo <- userColl.find().toList
-      } yield grater[UserProfile].asObject(dbo)
+      // TODO: toStream
+      UserProfileDAO.find(MongoDBObject()).toList
     } match {
       case Success(userProfiles)  => userProfiles.right[String]
       case Failure(ex)            =>
@@ -65,12 +59,11 @@ object UserStatisticsUpdateScheduler {
     }
   }
 
-  def getUserRepositories(userProfile: UserProfile,
-                          repoColl: MongoCollection): \/[String, List[Repository]] = {
+  def getUserRepositories(userProfile: UserProfile): \/[String, List[Repository]] = {
     Try {
-      for {
-        userRepo <- repoColl.find(MongoDBObject("owner" -> userProfile.name)).toList
-      } yield grater[Repository].asObject(userRepo)
+      // TODO toStream
+      // TODO distinct, sort by collectedAt
+      RepositoryDAO.find(ref = MongoDBObject("owner" -> userProfile.name)).toList
     } match {
       case Success(repos) => repos.right[String]
       case Failure(ex)    =>

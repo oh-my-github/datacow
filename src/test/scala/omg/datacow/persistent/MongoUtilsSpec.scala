@@ -4,17 +4,15 @@ import com.mongodb.casbah.commons.MongoDBObject
 import omg.datacow.util.TestEnvMongoUtil
 import org.scalatest._
 
-class MongoUtilsSpec extends WordSpecLike with Matchers with BeforeAndAfterEach {
+class MongoUtilsSpec
+  extends WordSpecLike with Matchers with BeforeAndAfterAll with BeforeAndAfterEach {
   import com.mongodb.casbah.commons.conversions.scala._
   RegisterJodaTimeConversionHelpers()
 
+  import MongoUtils._
   import omg.datacow.util.Fixtures._
 
-  override def beforeEach = {
-    TestEnvMongoUtil.initialize
-  }
-
-  override def afterEach = { TestEnvMongoUtil.stop }
+  override def beforeEach = { TestEnvMongoUtil.dropDatabase }
 
   "test UserProfileDAO" in {
     UserProfileDAO.insert(user1)

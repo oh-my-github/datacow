@@ -18,9 +18,8 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
 
   def this() = this(ActorSystem("GithubResponsePersisterSpec"))
 
-  override def beforeEach: Unit = { TestEnvMongoUtil.initialize }
-  override def afterEach: Unit = { TestEnvMongoUtil.stop }
-  override def afterAll: Unit = { TestKit.shutdownActorSystem(system) }
+  override def beforeEach = { TestEnvMongoUtil.dropDatabase }
+  override def afterAll = { TestKit.shutdownActorSystem(system) }
 
   "should persist Repository to the repository collection" in {
     val persister = createPersister
@@ -49,6 +48,19 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
     expectMsgPF(10 seconds) {
       case GithubResponsePersister.Failed => ()
     }
+  }
+
+  "PersistenceRouter should persiste GithubResponse.Languages messages" in {
+    val router = createPersistenceRouter
+
+    router ! langs1
+    expectMsgPF(10 seconds) {
+      case Persisted => ()
+    }
+  }
+
+  def createPersistenceRouter = {
+    TestActorRef[GithubResponsePersisterRouter]
   }
 
   def createPersister = {

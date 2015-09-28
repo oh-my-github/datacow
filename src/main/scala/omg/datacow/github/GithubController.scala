@@ -34,6 +34,7 @@ class GithubController extends Actor with ActorLogging {
 
     case message: GithubResponse =>
       log.info(message.toString)
+      // TODO origin check using Map
       origin = Some(sender)
       persistenceRouter ! message
 

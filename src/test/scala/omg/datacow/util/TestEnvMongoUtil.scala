@@ -1,19 +1,19 @@
 package omg.datacow.util
 
-import com.mongodb.casbah.MongoClient
+import com.mongodb.casbah.{MongoDB, MongoClient}
 import com.typesafe.config.ConfigFactory
-import omg.datacow.DataCowConfig
-import omg.datacow.persistent.MongoUtils
+import omg.datacow.persistent.MongoUtils._
+
+import de.flapdoodle.embed.mongo._
+import de.flapdoodle.embed.mongo.config._
+import de.flapdoodle.embed.mongo.distribution._
+import de.flapdoodle.embed.process.config.io._
+import de.flapdoodle.embed.process.extract._
+import de.flapdoodle.embed.process.io._
+import de.flapdoodle.embed.process.io.directories._
+import de.flapdoodle.embed.process.runtime._
 
 object TestEnvMongoUtil {
-  import de.flapdoodle.embed.mongo._
-  import de.flapdoodle.embed.mongo.config._
-  import de.flapdoodle.embed.mongo.distribution._
-  import de.flapdoodle.embed.process.config.io._
-  import de.flapdoodle.embed.process.extract._
-  import de.flapdoodle.embed.process.io._
-  import de.flapdoodle.embed.process.io.directories._
-  import de.flapdoodle.embed.process.runtime._
 
   val conf = ConfigFactory.load
   lazy val localhostIPv6 = Network.localhostIsIPv6()
@@ -39,7 +39,7 @@ object TestEnvMongoUtil {
     .build()
 
   val version = Version.Main.PRODUCTION
-  val testMongoPort = MongoUtils.getMongoURL.split(":")(1)
+  val testMongoPort = getMongoURL.split(":")(1)
   lazy val mongodConfig = new MongodConfigBuilder()
     .version(version)
     .net(new Net(testMongoPort.toInt, localhostIPv6))
@@ -64,4 +64,7 @@ object TestEnvMongoUtil {
     mongod.stop()
     mongodExe.stop()
   }
+
+  def getMongoDB: MongoDB = MongoClient(getMongoURL)(mongoSchema)
+  def dropDatabase = getMongoDB.dropDatabase
 }

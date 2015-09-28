@@ -24,20 +24,7 @@ class GithubResponsePersisterRouterSpec(_system: ActorSystem)
   def this() = this(ActorSystem("GithubResponsePersisterRouterSpec"))
   val conf = ConfigFactory.load
 
-  override def beforeEach() = { TestEnvMongoUtil.initialize }
-  override def afterEach() = { TestEnvMongoUtil.stop }
-  override def afterAll() = { TestKit.shutdownActorSystem(system) }
+  override def beforeEach = { TestEnvMongoUtil.dropDatabase }
+  override def afterAll = { TestKit.shutdownActorSystem(system) }
 
-  "PersistenceRouter should persiste GithubResponse.Languages messages" in {
-    val router = createPersistenceRouter
-
-    router ! langs1
-    expectMsgPF(10 seconds) {
-      case Persisted => ()
-    }
-  }
-
-  def createPersistenceRouter = {
-    TestActorRef[GithubResponsePersisterRouter]
-  }
 }
