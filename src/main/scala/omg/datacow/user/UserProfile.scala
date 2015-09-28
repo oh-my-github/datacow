@@ -2,8 +2,11 @@ package omg.datacow.user
 
 import com.github.nscala_time.time.Imports.DateTime
 
+import com.novus.salat.annotations._
+import com.mongodb.casbah.Imports._
+
 case class UserProfile(
-  id: String,
+  _id: ObjectId = new ObjectId,
   name: String,
   githubProfile: GithubProfile
 )

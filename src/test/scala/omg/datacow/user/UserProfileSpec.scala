@@ -23,7 +23,7 @@ class UserProfileSpec extends FunSuite with Matchers with BeforeAndAfterEach {
   test("persisted dbo user can be converted back to scala User") {
     val dbo = grater[UserProfile].asDBObject(user1)
     users.insert(dbo)
-    val user = users.findOne(MongoDBObject("id" -> user1.id)).get
+    val user = users.findOne(MongoDBObject("_id" -> user1._id)).get
     val scalao = grater[UserProfile].asObject(user)
 
     scalao shouldBe user1

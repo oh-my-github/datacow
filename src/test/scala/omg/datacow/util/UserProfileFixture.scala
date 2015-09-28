@@ -2,11 +2,12 @@ package omg.datacow.util
 
 import omg.datacow.user._
 import com.github.nscala_time.time.Imports.DateTime
+import org.bson.types.ObjectId
 
 object UserProfileFixture {
 
   val user1 = UserProfile(
-    "104919591",
+    new ObjectId,
     "1ambda",
     GithubProfile(
       "4910051",
@@ -25,7 +26,7 @@ object UserProfileFixture {
   )
 
   val user2 = UserProfile(
-    "104919592",
+    new ObjectId,
     "njir",
     GithubProfile(
       "4910052",
@@ -44,7 +45,7 @@ object UserProfileFixture {
   )
 
   val user3 = UserProfile(
-    "104919593",
+    new ObjectId,
     "tocology",
     GithubProfile(
       "4910053",
