@@ -8,7 +8,6 @@ import com.mongodb.casbah.Imports._
 import omg.datacow.DataCowConfig
 import omg.datacow.github.response.GithubResponse._
 import omg.datacow.github.response.GithubResponsePersister._
-import omg.datacow.persistent.MongoConfig
 
 import scala.util._
 

@@ -2,7 +2,6 @@ package omg.datacow.github.response
 
 import akka.actor._
 import akka.routing._
-import omg.datacow.persistent.MongoConfig
 
 class GithubResponsePersisterRouter extends Actor with ActorLogging {
 

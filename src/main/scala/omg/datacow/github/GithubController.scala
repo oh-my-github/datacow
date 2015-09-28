@@ -8,7 +8,6 @@ import akka.actor._
 import omg.datacow.github.request._
 import omg.datacow.github.response.GithubResponsePersister.{PersisterEvent, Failed, Persisted}
 import omg.datacow.github.response._
-import omg.datacow.persistent.MongoConfig
 import omg.datacow.user.UserStatisticsUpdateScheduler
 
 class GithubController extends Actor with ActorLogging {

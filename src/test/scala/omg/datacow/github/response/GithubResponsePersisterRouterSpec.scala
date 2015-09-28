@@ -1,7 +1,6 @@
 package omg.datacow.github.response
 
 import omg.datacow.github.response.GithubResponsePersister.Persisted
-import omg.datacow.persistent.MongoConfig
 import omg.datacow.util.MongoUtil
 
 import scala.concurrent.duration._

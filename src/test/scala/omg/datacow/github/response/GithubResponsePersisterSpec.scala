@@ -5,7 +5,6 @@ import akka.testkit._
 import com.typesafe.config.ConfigFactory
 import omg.datacow.github.response.GithubResponse._
 import omg.datacow.github.response.GithubResponsePersister._
-import omg.datacow.persistent.MongoConfig
 import omg.datacow.util.MongoUtil
 import org.scalatest._
 

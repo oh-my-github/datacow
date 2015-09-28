@@ -3,7 +3,6 @@ package omg.datacow.util
 import com.mongodb.casbah.MongoClient
 import com.typesafe.config.ConfigFactory
 import omg.datacow.DataCowConfig
-import omg.datacow.persistent.MongoConfig
 
 object MongoUtil {
   import de.flapdoodle.embed.mongo._
