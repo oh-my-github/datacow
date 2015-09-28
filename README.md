@@ -8,9 +8,9 @@
 - [TODO](https://github.com/oh-my-github/datacow/blob/develop/TODO.md)
 
 ### Build
-- Use env vars 
+- ~~Use env vars~~ 
 - Build pr when given the 'test this please' comments on Github issues (using Travis CI)
-- Update version automatically using Git rev-parse
+- ~~Update version automatically using Git rev-parse~~
 
 ### Documentation
 - Generated Docs?
@@ -23,5 +23,26 @@
 
 ### Domain
 - Non-breaking validation (sender, persister, updateScheduler)
-- Convert UserProfile.GithubProfile.updatedAt, createdAt types to `DateTime` from `String`
+- ~~Convert UserProfile.GithubProfile.updatedAt, createdAt types to `DateTime` from `String`~~
 
+## Development
+
+### Run
+
+```
+sbt runMain
+```
+
+### Testing
+
+```
+sbt tst
+```
+
+### Versioing
+
+```
+pip install --upgrade bumpversion
+bumpversion --verbose --dry-run --allow-dirty # check
+bumpversion --verbose [patch|minor|major] # see: https://github.com/peritus/bumpversion
+```
