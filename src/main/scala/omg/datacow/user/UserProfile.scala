@@ -21,7 +21,7 @@ case class GithubProfile(
   login:         String, /* github.login */
   email:         String,
   accessToken:   String,
-  refreshToken:  String,
+  refreshToken:  Option[String],
   following:     Long,
   followers:     Long,
   createdAt:     DateTime,

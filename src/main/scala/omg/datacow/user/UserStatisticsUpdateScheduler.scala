@@ -23,15 +23,19 @@ class UserStatisticsUpdateScheduler(controller: ActorRef) extends Actor with Act
       getUserProfiles() map { userProfiles =>
         userProfiles foreach { u =>
           /* send GetUserRepositories event */
-          val credential = GithubCredential(u.name, u.githubProfile.accessToken)
-          controller ! GetUserRepositories(u.name, credential)
+
+          val userId = u.githubProfile.login
+          val credential = GithubCredential(userId, u.githubProfile.accessToken)
+          controller ! GetUserRepositories(userId, credential)
 
           /* send GetRepositoryLanguages event */
+          println("asd")
           getUserRepositories(u) map { repos =>
+            println(s"repos: $repos")
             for {
               r <- repos
             } yield {
-              controller ! GetRepositoryLanguages(u.name, r.name, credential)
+              controller ! GetRepositoryLanguages(userId, r.name, credential)
             }
           }
         }
@@ -50,11 +54,12 @@ object UserStatisticsUpdateScheduler {
   def getUserProfiles(): \/[String, List[UserProfile]] = {
     Try {
       // TODO: toStream
+      // TODO logging
       UserProfileDAO.find(MongoDBObject()).toList
     } match {
       case Success(userProfiles)  => userProfiles.right[String]
       case Failure(ex)            =>
-        //        log.error(ex, "Failed to convert dbo to UserProfile")
+        println(ex)
         ex.getMessage.left[List[UserProfile]]
     }
   }
@@ -63,11 +68,11 @@ object UserStatisticsUpdateScheduler {
     Try {
       // TODO toStream
       // TODO distinct, sort by collectedAt
-      RepositoryDAO.find(ref = MongoDBObject("owner" -> userProfile.name)).toList
+      RepositoryDAO.find(ref = MongoDBObject("owner" -> userProfile.githubProfile.login)).toList
     } match {
       case Success(repos) => repos.right[String]
       case Failure(ex)    =>
-        //        log.error(ex, "Failed to convert dbo to Repository")
+        println(ex)
         ex.getMessage.left[List[Repository]]
     }
   }
