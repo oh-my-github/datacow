@@ -4,14 +4,14 @@ import com.mongodb.casbah.Imports._
 import com.novus.salat.dao._
 import com.novus.salat.global._
 import com.typesafe.config.ConfigFactory
-import omg.datacow.github.response.{Languages, Repository}
+import omg.datacow.Config
+import omg.datacow.github.response._
 import omg.datacow.user.UserProfile
 
 object MongoUtils {
-  import omg.datacow.ApplicationConfig._
 
   val conf = ConfigFactory.load
-  val appEnv = getAppEnv
+  val appEnv = Config.getAppEnv
 
   val userCollectionName = "users"
   val languageCollectionName = "language"

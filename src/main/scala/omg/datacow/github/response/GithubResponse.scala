@@ -17,7 +17,6 @@ import com.mongodb.casbah.Imports._
 import scala.util.Try
 
 import omg.datacow.github.request._
-import omg.datacow.ApplicationConfig._
 
 trait GithubResponse
 sealed case class Resources(core: Rate, search: Rate)

@@ -2,6 +2,7 @@ package omg.datacow
 
 import akka.actor.{ActorSystem, Props}
 import akka.util.Timeout
+import com.typesafe.config.ConfigFactory
 import omg.datacow.github.GithubController
 
 import scala.concurrent.duration._
