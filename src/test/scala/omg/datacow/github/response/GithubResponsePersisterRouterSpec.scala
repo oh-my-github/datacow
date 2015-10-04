@@ -1,6 +1,6 @@
 package omg.datacow.github.response
 
-import omg.datacow.github.response.GithubResponsePersister.Persisted
+import omg.datacow.github.response.GithubResponsePersistActor.Persisted
 import omg.datacow.util.TestEnvMongoUtil
 
 import scala.concurrent.duration._

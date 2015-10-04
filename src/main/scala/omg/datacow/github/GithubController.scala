@@ -1,14 +1,14 @@
 package omg.datacow.github
 
-import omg.datacow.user.UserStatisticsUpdateScheduler.RetrieveUserAccessToken
+import omg.datacow.user.UserStatisticsUpdateActor.RetrieveUserAccessToken
 
 import scala.concurrent.duration._
 import akka.actor.SupervisorStrategy.Restart
 import akka.actor._
 import omg.datacow.github.request._
-import omg.datacow.github.response.GithubResponsePersister.{PersisterEvent, Failed, Persisted}
+import omg.datacow.github.response.GithubResponsePersistActor.{PersisterEvent, Failed, Persisted}
 import omg.datacow.github.response._
-import omg.datacow.user.UserStatisticsUpdateScheduler
+import omg.datacow.user.UserStatisticsUpdateActor
 
 class GithubController extends Actor with ActorLogging {
 
@@ -47,12 +47,12 @@ class GithubController extends Actor with ActorLogging {
   }
 
   def createRequestRouter: ActorRef =
-    context.actorOf(Props[GithubRequestSenderRouter])
+    context.actorOf(Props[GithubRequestSendRouter])
 
   def createPersistenceRouter: ActorRef =
-    context.actorOf(Props[GithubResponsePersisterRouter])
+    context.actorOf(Props[GithubResponsePersistRouter])
 
   def createUserStatUpdateScheduler =
     context.actorOf(Props(
-      new UserStatisticsUpdateScheduler(self)))
+      new UserStatisticsUpdateActor(self)))
 }

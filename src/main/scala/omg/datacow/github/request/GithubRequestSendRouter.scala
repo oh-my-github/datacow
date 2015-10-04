@@ -4,7 +4,7 @@ import akka.actor.Actor.Receive
 import akka.actor._
 import akka.routing._
 
-class GithubRequestSenderRouter extends Actor with ActorLogging {
+class GithubRequestSendRouter extends Actor with ActorLogging {
   var router = {
     val routees = Vector.fill(5) {
       val r = context.actorOf(routeePropFactory)
@@ -25,5 +25,5 @@ class GithubRequestSenderRouter extends Actor with ActorLogging {
       router.route(message, sender())
   }
 
-  def routeePropFactory = Props[GithubRequestSender]
+  def routeePropFactory = Props[GithubRequestSendActor]
 }

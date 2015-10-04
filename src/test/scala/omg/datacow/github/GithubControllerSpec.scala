@@ -6,7 +6,7 @@ import org.scalatest._
 
 import omg.datacow.github.response._
 import omg.datacow.util.TestEnvMongoUtil
-import omg.datacow.github.response.GithubResponsePersister._
+import omg.datacow.github.response.GithubResponsePersistActor._
 import omg.datacow.persistent.MongoUtils
 
 import scala.concurrent.duration._

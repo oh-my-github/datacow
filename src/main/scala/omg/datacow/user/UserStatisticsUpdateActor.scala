@@ -14,8 +14,8 @@ import scala.util.{Try, Success, Failure}
 import scalaz._
 import Scalaz._
 
-class UserStatisticsUpdateScheduler(controller: ActorRef) extends Actor with ActorLogging {
-  import UserStatisticsUpdateScheduler._
+class UserStatisticsUpdateActor(controller: ActorRef) extends Actor with ActorLogging {
+  import UserStatisticsUpdateActor._
   import context.dispatcher
 
   override def receive: Receive = {
@@ -43,7 +43,7 @@ class UserStatisticsUpdateScheduler(controller: ActorRef) extends Actor with Act
   }
 }
 
-object UserStatisticsUpdateScheduler {
+object UserStatisticsUpdateActor {
   sealed trait UpdaterCommand
   sealed trait UpdaterEvent
 

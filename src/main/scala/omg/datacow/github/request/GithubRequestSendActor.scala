@@ -13,7 +13,7 @@ import omg.datacow.github.response.Language
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
-class GithubRequestSender extends Actor with ActorLogging {
+class GithubRequestSendActor extends Actor with ActorLogging {
   import context.dispatcher
   implicit val system = context.system
   implicit val timeout = Timeout(15 seconds)
@@ -48,12 +48,12 @@ class GithubRequestSender extends Actor with ActorLogging {
 
         case Failure(t) =>
           log.error(t, "failed to send request")
-          controller ! GithubRequestSender.RequestFailed
+          controller ! GithubRequestSendActor.RequestFailed
       }
   }
 }
 
-object GithubRequestSender {
+object GithubRequestSendActor {
   case object RequestFailed
   case object ParsingFailed
 }

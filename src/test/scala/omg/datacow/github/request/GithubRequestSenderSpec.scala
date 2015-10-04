@@ -23,16 +23,16 @@ class GithubRequestSenderSpec(_system: ActorSystem)
 
   // TODO non-breaking validation using scalaz NPE
   "sender should handle an invalid credential failure " in {
-    val sender = TestActorRef[GithubRequestSender]
+    val sender = TestActorRef[GithubRequestSendActor]
     val invalidCredential = GithubCredential("invalidId", "invalidSecret")
     sender ! GetUserRepositories("1ambda", invalidCredential)
     expectMsgPF(10 seconds) {
-      case GithubRequestSender.RequestFailed => ()
+      case GithubRequestSendActor.RequestFailed => ()
     }
   }
 
   "sender should return ApiRateLimit case class when given a GetAPIRateLimit" in {
-    val requestSender = TestActorRef[GithubRequestSender]
+    val requestSender = TestActorRef[GithubRequestSendActor]
     requestSender ! GetAPIRateLimit(testCredential)
     expectMsgPF(10 seconds) {
       case APIRateLimit(_, _) => ()
@@ -40,7 +40,7 @@ class GithubRequestSenderSpec(_system: ActorSystem)
   }
 
   "sender should return a Repository list when given a GetUserRepositories" in {
-    val requestSender = TestActorRef[GithubRequestSender]
+    val requestSender = TestActorRef[GithubRequestSendActor]
     requestSender ! GetUserRepositories("1ambda", testCredential)
     expectMsgPF(10 seconds) {
       case Repositories(_) => ()
@@ -48,7 +48,7 @@ class GithubRequestSenderSpec(_system: ActorSystem)
   }
 
   "sender should return Languages case class when given a GetRepositoryLanguages" in {
-    val requestSender = TestActorRef[GithubRequestSender]
+    val requestSender = TestActorRef[GithubRequestSendActor]
     requestSender ! GetRepositoryLanguages("1ambda", "scala", testCredential)
     expectMsgPF(10 seconds) {
       case Languages(_, _, _, _) => ()

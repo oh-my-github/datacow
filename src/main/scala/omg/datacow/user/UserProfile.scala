@@ -8,7 +8,7 @@ import com.novus.salat.annotations._
 
 import com.mongodb.casbah.MongoConnection
 import com.mongodb.casbah.Imports._
-import omg.datacow.DataCowConfig
+import omg.datacow.ApplicationConfig
 
 case class UserProfile(
   _id: ObjectId = new ObjectId,

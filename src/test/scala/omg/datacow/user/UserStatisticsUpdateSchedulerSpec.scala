@@ -20,7 +20,7 @@ class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
   with WordSpecLike with Matchers with BeforeAndAfterEach with BeforeAndAfterAll {
 
   import omg.datacow.util.Fixtures._
-  import UserStatisticsUpdateScheduler._
+  import UserStatisticsUpdateActor._
   import MongoUtils._
   import com.mongodb.casbah.commons.conversions.scala._
   RegisterJodaTimeConversionHelpers()
@@ -95,13 +95,13 @@ class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
     UserProfileDAO.insert(user1)
     UserProfileDAO.insert(user2)
 
-    val e = UserStatisticsUpdateScheduler.getUserProfiles()
+    val e = UserStatisticsUpdateActor.getUserProfiles()
     e.isRight shouldBe true
     (e getOrElse Nil) shouldBe List(user1, user2)
   }
 
   "getUserProfiles should return Nil when profiles doesn't exist" in {
-    val e = UserStatisticsUpdateScheduler.getUserProfiles()
+    val e = UserStatisticsUpdateActor.getUserProfiles()
     e.isRight shouldBe true
     (e getOrElse "empty" ) shouldBe Nil
   }
@@ -131,7 +131,7 @@ class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
 
 
   def createUpdater(controller: ActorRef): ActorRef = {
-    system.actorOf(Props(new UserStatisticsUpdateScheduler(controller)))
+    system.actorOf(Props(new UserStatisticsUpdateActor(controller)))
   }
 
 }

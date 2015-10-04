@@ -3,7 +3,7 @@ package omg.datacow.github.response
 import akka.actor._
 import akka.routing._
 
-class GithubResponsePersisterRouter extends Actor with ActorLogging {
+class GithubResponsePersistRouter extends Actor with ActorLogging {
 
   var router = {
     val routees = Vector.fill(5) {
@@ -26,6 +26,6 @@ class GithubResponsePersisterRouter extends Actor with ActorLogging {
       router.route(message, sender())
   }
 
-  def createPersisterProp = Props[GithubResponsePersister]
+  def createPersisterProp = Props[GithubResponsePersistActor]
 
 }

@@ -12,7 +12,7 @@ import omg.datacow.github.response.{Repository, Languages}
 import omg.datacow.user.UserProfile
 
 object MongoUtils {
-  import omg.datacow.DataCowConfig._
+  import omg.datacow.ApplicationConfig._
 
   val conf = ConfigFactory.load
   val appEnv = getAppEnv

@@ -6,7 +6,7 @@ import omg.datacow.github.GithubController
 
 import scala.concurrent.duration._
 
-object DataCowApp extends App {
+object Application extends App {
   implicit val system = ActorSystem()
   implicit val timeout = Timeout(3 seconds)
 

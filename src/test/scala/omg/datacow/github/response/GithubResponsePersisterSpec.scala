@@ -4,7 +4,7 @@ import akka.actor._
 import akka.testkit._
 import com.typesafe.config.ConfigFactory
 import omg.datacow.github.response.GithubResponse._
-import omg.datacow.github.response.GithubResponsePersister._
+import omg.datacow.github.response.GithubResponsePersistActor._
 import omg.datacow.util.TestEnvMongoUtil
 import org.scalatest._
 
@@ -46,7 +46,7 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
     persister ! APIRateLimit(Resources(emptyRate, emptyRate), emptyRate)
 
     expectMsgPF(10 seconds) {
-      case GithubResponsePersister.Failed => ()
+      case GithubResponsePersistActor.Failed => ()
     }
   }
 
@@ -60,11 +60,11 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
   }
 
   def createPersistenceRouter = {
-    TestActorRef[GithubResponsePersisterRouter]
+    TestActorRef[GithubResponsePersistRouter]
   }
 
   def createPersister = {
-    TestActorRef(Props[GithubResponsePersister])
+    TestActorRef(Props[GithubResponsePersistActor])
   }
 }
 
