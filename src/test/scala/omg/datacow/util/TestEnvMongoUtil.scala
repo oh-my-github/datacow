@@ -2,7 +2,7 @@ package omg.datacow.util
 
 import com.mongodb.casbah.{MongoDB, MongoClient}
 import com.typesafe.config.ConfigFactory
-import omg.datacow.persistent.MongoUtils._
+import MongoUtils._
 
 import de.flapdoodle.embed.mongo._
 import de.flapdoodle.embed.mongo.config._

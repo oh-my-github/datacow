@@ -9,6 +9,7 @@ import com.mongodb.casbah.Imports._
 
 import omg.datacow.github.response._
 import omg.datacow.persistent._
+import omg.datacow.util.MongoUtils
 
 import scala.util.{Try, Success, Failure}
 import scalaz._

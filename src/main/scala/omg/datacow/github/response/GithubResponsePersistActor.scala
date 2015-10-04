@@ -4,6 +4,7 @@ import akka.actor.{ActorLogging, Actor}
 import com.mongodb.casbah.Imports._
 import omg.datacow.github.response.GithubResponsePersistActor._
 import omg.datacow.persistent._
+import omg.datacow.util.MongoUtils
 
 import scala.util._
 

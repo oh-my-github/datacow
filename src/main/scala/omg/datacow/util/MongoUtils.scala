@@ -1,14 +1,10 @@
-package omg.datacow.persistent
-
-import com.novus.salat._
-import com.novus.salat.dao._
-import com.novus.salat.global._
-import com.novus.salat.annotations._
+package omg.datacow.util
 
 import com.mongodb.casbah.Imports._
-
+import com.novus.salat.dao._
+import com.novus.salat.global._
 import com.typesafe.config.ConfigFactory
-import omg.datacow.github.response.{Repository, Languages}
+import omg.datacow.github.response.{Languages, Repository}
 import omg.datacow.user.UserProfile
 
 object MongoUtils {

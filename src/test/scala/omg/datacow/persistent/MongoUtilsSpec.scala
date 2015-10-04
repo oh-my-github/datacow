@@ -1,7 +1,7 @@
 package omg.datacow.persistent
 
 import com.mongodb.casbah.commons.MongoDBObject
-import omg.datacow.util.TestEnvMongoUtil
+import omg.datacow.util.{MongoUtils, TestEnvMongoUtil}
 import org.scalatest._
 
 class MongoUtilsSpec
