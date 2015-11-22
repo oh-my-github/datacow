@@ -1,23 +1,17 @@
 package omg.datacow.user
 
 import omg.datacow.github.request._
-
-import akka.actor._
-import com.novus.salat._
-import com.novus.salat.global._
-import com.mongodb.casbah.Imports._
-
 import omg.datacow.github.response._
-import omg.datacow.util._
 import omg.datacow.util.MongoUtils
 
-import scalaz._
-import Scalaz._
+import akka.actor._
+import com.mongodb.casbah.Imports._
+import com.github.nscala_time.time.Imports.DateTime
+
+import scalaz._, Scalaz._
 
 class UserStatisticsUpdateActor(controller: ActorRef) extends Actor with ActorLogging {
   import UserStatisticsUpdateActor._
-  import context.dispatcher
-  import scalaz.Validation.FlatMap._
 
   override def receive: Receive = {
     case RetrieveUserAccessToken =>
@@ -25,13 +19,15 @@ class UserStatisticsUpdateActor(controller: ActorRef) extends Actor with ActorLo
       getProfiles() match {
         case Success(profiles) =>
 
+          val updateAt = DateTime.now
+
           profiles foreach { profile =>
             val userId = profile.githubProfile.login
             val credential = GithubCredential(userId, profile.githubProfile.accessToken)
-            controller ! GetUserRepositories(userId, credential)
+            controller ! GetUserRepositories(userId, credential, updateAt)
 
             getRepositories(profile) map(_.foreach { repo =>
-              controller ! GetRepositoryLanguages(userId, repo.name, credential)
+              controller ! GetRepositoryLanguages(userId, credential, updateAt, repo.name)
             })
           }
 

@@ -32,8 +32,8 @@ class GithubRequestSendActor extends Actor with ActorLogging {
   override def receive = {
     case req: GithubRequest =>
 
-      val pipeline = createPipeline(req.getCredential)
-      val res = pipeline(Get(Uri(req.getUrl)))
+      val pipeline = createPipeline(req.credential)
+      val res = pipeline(Get(Uri(req.uri)))
       val controller = sender
 
       res.onComplete {

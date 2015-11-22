@@ -7,6 +7,7 @@ import omg.datacow.github.response._
 import omg.datacow.util.TestUtility
 import org.scalatest._
 import scala.concurrent.duration._
+import com.github.nscala_time.time.Imports.DateTime
 
 class GithubRequestSenderSpec(_system: ActorSystem)
   extends TestKit(_system) with ImplicitSender
@@ -25,7 +26,7 @@ class GithubRequestSenderSpec(_system: ActorSystem)
   "sender should handle an invalid credential failure " in {
     val sender = TestActorRef[GithubRequestSendActor]
     val invalidCredential = GithubCredential("invalidId", "invalidSecret")
-    sender ! GetUserRepositories("1ambda", invalidCredential)
+    sender ! GetUserRepositories("1ambda", invalidCredential, DateTime.now)
     expectMsgPF(10 seconds) {
       case GithubRequestSendActor.RequestFailed => ()
     }
@@ -33,7 +34,7 @@ class GithubRequestSenderSpec(_system: ActorSystem)
 
   "sender should return ApiRateLimit case class when given a GetAPIRateLimit" in {
     val requestSender = TestActorRef[GithubRequestSendActor]
-    requestSender ! GetAPIRateLimit(testCredential)
+    requestSender ! GetAPIRateLimit(testCredential, DateTime.now)
     expectMsgPF(10 seconds) {
       case APIRateLimit(_, _) => ()
     }
@@ -41,7 +42,7 @@ class GithubRequestSenderSpec(_system: ActorSystem)
 
   "sender should return a Repository list when given a GetUserRepositories" in {
     val requestSender = TestActorRef[GithubRequestSendActor]
-    requestSender ! GetUserRepositories("1ambda", testCredential)
+    requestSender ! GetUserRepositories("1ambda", testCredential, DateTime.now)
     expectMsgPF(10 seconds) {
       case Repositories(_) => ()
     }
@@ -49,7 +50,7 @@ class GithubRequestSenderSpec(_system: ActorSystem)
 
   "sender should return Languages case class when given a GetRepositoryLanguages" in {
     val requestSender = TestActorRef[GithubRequestSendActor]
-    requestSender ! GetRepositoryLanguages("1ambda", "scala", testCredential)
+    requestSender ! GetRepositoryLanguages("1ambda", testCredential, DateTime.now, "scala")
     expectMsgPF(10 seconds) {
       case Languages(_, _, _, _) => ()
     }

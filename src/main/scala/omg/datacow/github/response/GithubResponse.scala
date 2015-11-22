@@ -22,7 +22,7 @@ sealed case class Resources(core: Rate, search: Rate)
 sealed case class Rate(limit: Int, remaining: Int, reset: Long)
 final case class APIRateLimit(resources: Resources, rate: Rate) extends GithubResponse
 
-final case class Repository(collectedAt: DateTime,
+final case class Repository(collectAt: DateTime,
                             owner: String, name: String, url: String,
                             isPrivate: Boolean, isForked: Boolean,
                             createdAt: DateTime, updatedAt: DateTime, pushedAt: DateTime,
@@ -31,7 +31,7 @@ final case class Repository(collectedAt: DateTime,
 final case class Repositories(repos: List[Repository]) extends GithubResponse // avoid to type erasure
 
 final case class Language(name: String, line: Long)
-final case class Languages(collectedAt: DateTime,
+final case class Languages(collectAt: DateTime,
                            owner: String, repositoryName: String,
                            languages: List[Language]) extends GithubResponse
 
@@ -59,7 +59,7 @@ object GithubResponse {
             }
 
             Repository(
-              getCurrentDateTimeAsISOString, owner, name, url,
+              getCurrentDateTime, owner, name, url,
               isForked, isPrivate,
               new DateTime(createdAt), new DateTime(updatedAt), new DateTime(pushedAt),
               stargazersCount.toLong, watchersCount.toLong, forksCount.toLong
@@ -83,20 +83,19 @@ object GithubResponse {
     }
   }
 
-
-  def getCurrentDateTimeAsISOString: DateTime = DateTime.now
+  def getCurrentDateTime: DateTime = DateTime.now
 
   def parseGithubResponse(request: GithubRequest, response: String) = {
     import Protocol._
 
     Try {
       request match {
-        case GetAPIRateLimit(_) => response.parseJson.convertTo[APIRateLimit]
-        case GetUserRepositories(_, _) =>
+        case GetAPIRateLimit(_, _) => response.parseJson.convertTo[APIRateLimit]
+        case GetUserRepositories(owner, credential, requestAt) =>
           Repositories(response.parseJson.convertTo[List[Repository]])
-        case GetRepositoryLanguages(owner, repository, _) =>
+        case GetRepositoryLanguages(owner, credential, collectAt, repository) =>
           val langList = response.parseJson.convertTo[List[Language]]
-          Languages(GithubResponse.getCurrentDateTimeAsISOString, owner, repository, langList)
+          Languages(collectAt, owner, repository, langList)
       }
     }
   }
