@@ -1,10 +1,10 @@
 package omg.datacow.util
 
-import com.github.nscala_time.time.Imports.DateTime
 import omg.datacow.github.response._
 import omg.datacow.user.{GithubProfile, UserProfile}
 
 import scala.concurrent.duration._
+import com.github.nscala_time.time.Imports.DateTime
 
 import com.novus.salat._
 import com.novus.salat.global._

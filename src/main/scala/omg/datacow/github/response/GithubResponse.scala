@@ -2,8 +2,7 @@ package omg.datacow.github.response
 
 import spray.json._
 
-import com.github.nscala_time.time.Imports._
-import org.joda.time.Days
+import com.github.nscala_time.time.Imports.DateTime
 import org.joda.time.format._
 
 import com.novus.salat._
@@ -85,9 +84,7 @@ object GithubResponse {
   }
 
 
-  def getCurrentDateTimeAsISOString: DateTime = {
-    DateTime.now
-  }
+  def getCurrentDateTimeAsISOString: DateTime = DateTime.now
 
   def parseGithubResponse(request: GithubRequest, response: String) = {
     import Protocol._
