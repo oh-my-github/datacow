@@ -59,7 +59,7 @@ object GithubResponse {
             }
 
             Repository(
-              getCurrentDateTime, owner, name, url,
+              /* TODO: useless, inefficient */ DateTime.now,  owner, name, url,
               isForked, isPrivate,
               new DateTime(createdAt), new DateTime(updatedAt), new DateTime(pushedAt),
               stargazersCount.toLong, watchersCount.toLong, forksCount.toLong
@@ -83,16 +83,19 @@ object GithubResponse {
     }
   }
 
-  def getCurrentDateTime: DateTime = DateTime.now
-
   def parseGithubResponse(request: GithubRequest, response: String) = {
     import Protocol._
 
     Try {
       request match {
         case GetAPIRateLimit(_, _) => response.parseJson.convertTo[APIRateLimit]
-        case GetUserRepositories(owner, credential, requestAt) =>
-          Repositories(response.parseJson.convertTo[List[Repository]])
+        case GetUserRepositories(owner, credential, collectAt) =>
+          Repositories(
+            /* TODO: inefficient */
+            response.parseJson.convertTo[List[Repository]] map { repo =>
+              repo.copy(collectAt = collectAt)
+            }
+          )
         case GetRepositoryLanguages(owner, credential, collectAt, repository) =>
           val langList = response.parseJson.convertTo[List[Language]]
           Languages(collectAt, owner, repository, langList)

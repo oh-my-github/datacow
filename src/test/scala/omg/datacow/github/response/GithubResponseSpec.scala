@@ -26,7 +26,7 @@ class GithubResponseSpec extends FunSuite with Matchers {
     }
   }
 
-  test("unmarshal /rate_limit") {
+  test("unmarshall /rate_limit") {
     val response =
       """
         | {
@@ -54,17 +54,32 @@ class GithubResponseSpec extends FunSuite with Matchers {
     rateLimit.rate shouldBe Rate(5000, 5000, 1440690501)
   }
 
-  test("unmarshal /users/:username/repos") {
+  test("unmarshall /users/:username/repos") {
     val repoList = userReposExample.parseJson.convertTo[List[Repository]]
     repoList.size shouldBe 2
   }
 
-  test("unmarshal /repos/:owner/:repo") {
+  test("unmarshalled Repositories should have the same collectAt") {
+    val repoList = userReposExample.parseJson.convertTo[List[Repository]]
+
+    /* should greater than 1 to keep the semantic of this test */
+    repoList.size shouldBe 2
+
+    var collectAtSet: Set[DateTime] = Set()
+
+    repoList.foreach { repo =>
+      collectAtSet = collectAtSet + repo.collectAt
+    }
+
+    collectAtSet.size shouldBe 1
+  }
+
+  test("unmarshall /repos/:owner/:repo") {
     val repo = userRepoExample.parseJson.convertTo[Repository]
     repo.name shouldBe "scala"
   }
 
-  test("unmarshal /repos/:onwer/:repo/languages") {
+  test("unmarshall /repos/:onwer/:repo/languages") {
     val json =
     """
       |{
