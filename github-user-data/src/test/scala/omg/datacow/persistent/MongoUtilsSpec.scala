@@ -1,7 +1,7 @@
 package omg.datacow.persistent
 
 import com.mongodb.casbah.commons.MongoDBObject
-import omg.datacow.util.{MongoUtils, TestEnvMongoUtil}
+import omg.datacow.githubuser.util.{MongoUtils, TestEnvMongoUtil}
 import org.scalatest._
 
 class MongoUtilsSpec
@@ -10,7 +10,7 @@ class MongoUtilsSpec
   RegisterJodaTimeConversionHelpers()
 
   import MongoUtils._
-  import omg.datacow.util.Fixtures._
+  import omg.datacow.githubuser.util.Fixtures._
 
   override def beforeEach = { TestEnvMongoUtil.dropDatabase }
 
