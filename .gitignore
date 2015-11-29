@@ -3,4 +3,4 @@ target/
 project/target/
 project/project/target/
 
-src/main/resources/application.conf
+application.conf
