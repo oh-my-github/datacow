@@ -43,14 +43,14 @@ class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
     val expectedCredential1 = GithubCredential(user1.name, user1.githubProfile.accessToken)
 
     expectMsgPF(10 seconds) {
-      case GetUserRepositories(expectedName1, expectedCredential1) => ()
+      case GetUserRepositories(expectedName1, expectedCredential1, _) => ()
     }
 
     val expectedName2 = user2.name
     val expectedCredential2 = GithubCredential(user2.name, user2.githubProfile.accessToken)
 
     expectMsgPF(10 seconds) {
-      case GetUserRepositories(expectedName2, expectedCredential2) => ()
+      case GetUserRepositories(expectedName2, expectedCredential2, _) => ()
     }
   }
 
@@ -66,21 +66,25 @@ class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
     val expectedCredential = GithubCredential(user1.name, user1.githubProfile.accessToken)
 
     expectMsgPF(10 seconds) {
-      case GetUserRepositories(expectedName, expectedCredential) => ()
+      case GetUserRepositories(expectedName, expectedCredential, _) => ()
     }
 
-    val expectedRepoOwner1 = repo1.owner
-    val expectedRepoName1 = repo1.name
+    val expectedOwner1 = repo1.owner
+    val expectedRepo1 = repo1.name
 
     expectMsgPF(10 seconds) {
-      case GetRepositoryLanguages(expectedRepoOwner1, expectedRepoName1, expectedCredential) => ()
+      case GetRepositoryLanguages(owner1, credential, _, repo1) => ()
+        owner1 shouldBe expectedOwner1
+        repo1 shouldBe expectedRepo1
     }
 
-    val expectedRepoOwner2 = repo2.owner
-    val expectedRepoName2 = repo2.name
+    val expectedOwner2 = repo2.owner
+    val expectedRepo2 = repo2.name
 
     expectMsgPF(10 seconds) {
-      case GetRepositoryLanguages(expectedRepoOwner2, expectedRepoName2, expectedCredential) => ()
+      case GetRepositoryLanguages(owner2, credential, _, repo2) => ()
+        owner2 shouldBe expectedOwner2
+        repo2 shouldBe expectedRepo2
     }
   }
 
@@ -91,42 +95,38 @@ class UserStatisticsUpdateSchedulerSpec(_system: ActorSystem)
     expectNoMsg(2 seconds)
   }
 
-  "getUserProfiles should return List[UserProfile] when user profiles exist" in {
+  "getProfiles should return List[UserProfile] when user profiles exist" in {
     UserProfileDAO.insert(user1)
     UserProfileDAO.insert(user2)
 
-    val e = UserStatisticsUpdateActor.getUserProfiles()
-    e.isRight shouldBe true
-    (e getOrElse Nil) shouldBe List(user1, user2)
+    val v = UserStatisticsUpdateActor.getProfiles()
+    v.isSuccess shouldBe true
+    (v getOrElse Nil) shouldBe List(user1, user2)
   }
 
-  "getUserProfiles should return Nil when profiles doesn't exist" in {
-    val e = UserStatisticsUpdateActor.getUserProfiles()
-    e.isRight shouldBe true
-    (e getOrElse "empty" ) shouldBe Nil
+  "getProfiles should return Nil when profiles doesn't exist" in {
+    val e = UserStatisticsUpdateActor.getProfiles()
+    e.isFailure shouldBe true
   }
 
-  "getUserRepositories should return List[Repository] when the given user have repos" in {
+  "getRepositories should return List[Repository] when the given user have repos" in {
     UserProfileDAO.insert(user1)
     RepositoryDAO.insert(repo1)
     RepositoryDAO.insert(repo2)
 
-    val reposEither = getUserRepositories(user1)
+    val v = getRepositories(user1)
 
-    reposEither.isRight shouldBe true
-    (reposEither getOrElse Nil) shouldBe List(repo1, repo2)
+    v map { repos => repos shouldBe List(repo1, repo2) }
+    v.isSuccess shouldBe true
   }
 
-  "getUserRepositories should return Nil when the given user have no repo" in {
+  "getRepositories should return Nil when the given user have no repo" in {
     UserProfileDAO.insert(user3)
 
-    val reposEither = getUserRepositories(user3)
+    val v = getRepositories(user3)
 
-    reposEither map { repos =>
-      repos shouldBe Nil
-    }
-
-    reposEither.isRight shouldBe true
+    v map { repos => repos shouldBe Nil }
+    v.isFailure shouldBe true
   }
 
 

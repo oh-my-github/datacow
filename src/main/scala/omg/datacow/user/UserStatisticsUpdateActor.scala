@@ -1,45 +1,37 @@
 package omg.datacow.user
 
 import omg.datacow.github.request._
-
-import akka.actor._
-import com.novus.salat._
-import com.novus.salat.global._
-import com.mongodb.casbah.Imports._
-
 import omg.datacow.github.response._
-import omg.datacow.util._
 import omg.datacow.util.MongoUtils
 
-import scala.util.{Try, Success, Failure}
-import scalaz._
-import Scalaz._
+import akka.actor._
+import com.mongodb.casbah.Imports._
+import com.github.nscala_time.time.Imports.DateTime
+
+import scalaz._, Scalaz._
 
 class UserStatisticsUpdateActor(controller: ActorRef) extends Actor with ActorLogging {
   import UserStatisticsUpdateActor._
-  import context.dispatcher
 
   override def receive: Receive = {
     case RetrieveUserAccessToken =>
-      getUserProfiles() map { userProfiles =>
-        userProfiles foreach { u =>
-          /* send GetUserRepositories event */
 
-          val userId = u.githubProfile.login
-          val credential = GithubCredential(userId, u.githubProfile.accessToken)
-          controller ! GetUserRepositories(userId, credential)
+      getProfiles() match {
+        case Success(profiles) =>
 
-          /* send GetRepositoryLanguages event */
-          println("asd")
-          getUserRepositories(u) map { repos =>
-            println(s"repos: $repos")
-            for {
-              r <- repos
-            } yield {
-              controller ! GetRepositoryLanguages(userId, r.name, credential)
-            }
+          val updateAt = DateTime.now
+
+          profiles foreach { profile =>
+            val userId = profile.githubProfile.login
+            val credential = GithubCredential(userId, profile.githubProfile.accessToken)
+            controller ! GetUserRepositories(userId, credential, updateAt)
+
+            getRepositories(profile) map(_.foreach { repo =>
+              controller ! GetRepositoryLanguages(userId, credential, updateAt, repo.name)
+            })
           }
-        }
+
+        case Failure(message) => log.error(message)
       }
   }
 }
@@ -52,30 +44,18 @@ object UserStatisticsUpdateActor {
 
   case object RetrieveUserAccessToken extends UpdaterCommand
 
-  def getUserProfiles(): \/[String, List[UserProfile]] = {
-    Try {
-      // TODO: toStream
-      // TODO logging
-      UserProfileDAO.find(MongoDBObject()).toList
-    } match {
-      case Success(userProfiles)  => userProfiles.right[String]
-      case Failure(ex)            =>
-        println(ex)
-        ex.getMessage.left[List[UserProfile]]
+  def getProfiles(): Validation[String, List[UserProfile]] = {
+    UserProfileDAO.find(MongoDBObject()).toList match {
+      case profiles if profiles isEmpty => "No UserProfiles".failure
+      case profiles                     => profiles.success
     }
   }
 
-  def getUserRepositories(userProfile: UserProfile): \/[String, List[Repository]] = {
-    Try {
-      // TODO toStream
+  def getRepositories(profile: UserProfile): Validation[String, List[Repository]] = {
       // TODO distinct, sort by collectedAt
-      RepositoryDAO.find(ref = MongoDBObject("owner" -> userProfile.githubProfile.login)).toList
-    } match {
-      case Success(repos) => repos.right[String]
-      case Failure(ex)    =>
-        println(ex)
-        ex.getMessage.left[List[Repository]]
+    RepositoryDAO.find(ref = MongoDBObject("owner" -> profile.githubProfile.login)).toList match {
+      case repos if repos isEmpty => s"No Repos for ${profile.name}".failure
+      case repos                  => repos.success
     }
   }
-
 }

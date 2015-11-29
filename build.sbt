@@ -27,6 +27,7 @@ libraryDependencies ++= Seq(
   "io.spray"                %% "spray-json"                       % "1.3.2"         % "compile",
   "org.slf4j"               %  "slf4j-log4j12"                    % "1.7.12"        % "compile",
   "com.chuusai"             %% "shapeless"                        % "2.2.5"         % "compile",
+  "com.github.nscala-time"  %% "nscala-time"                      % "2.6.0"         % "compile",
 
   "org.scalatest"           %% "scalatest"                        % "3.0.0-M7"      % "test",
   "de.flapdoodle.embed"     % "de.flapdoodle.embed.mongo"         % "1.50.0"        % "test",
