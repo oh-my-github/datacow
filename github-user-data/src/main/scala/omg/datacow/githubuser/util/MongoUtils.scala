@@ -13,7 +13,7 @@ object MongoUtils {
   val conf = ConfigFactory.load
   val appEnv = Config.getAppEnv
 
-  val userCollectionName = "users"
+  val userCollectionName = "user"
   val languageCollectionName = "language"
   val repositoryCollectionName = "repository"
 
