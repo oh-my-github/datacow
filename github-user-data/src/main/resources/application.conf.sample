@@ -1,23 +1,23 @@
 akka {
-    loglevel = DEBUG
-    log-config-on-start = on
-    akka.actor.debug.receive=on
+  loglevel = DEBUG
+  log-config-on-start = on
+  akka.actor.debug.receive=on
 }
 
 env {
-    TEST {
-        mongoURL = "localhost:27017"
-        mongoSchema = "omg-datacow-test"
-    }
+  TEST {
+    mongoURL = "localhost:27017"
+    mongoSchema = "ohmygithub-test"
+  }
 
-    LOCAL {
-        mongoURL = "localhost:27017"
-        mongoSchema = "omg-datacow-local"
-    }
+  LOCAL {
+    mongoURL = "localhost:27017"
+    mongoSchema = "ohmygithub-dev"
+  }
 
-    PRODUCTION {
-        mongoURL = ""
-        mongoSchema = ""
-    }
+  PRODUCTION {
+    mongoURL = ""
+    mongoSchema = ""
+  }
 }
 
