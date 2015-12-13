@@ -12,7 +12,9 @@ class MongoUtilsSpec
   import MongoUtils._
   import omg.datacow.githubuser.util.Fixtures._
 
-  override def beforeEach = { TestEnvMongoUtil.dropDatabase }
+  override def beforeEach = {
+    TestEnvMongoUtil.dropDatabase
+  }
 
   "test UserProfileDAO" in {
     UserProfileDAO.insert(user1)
