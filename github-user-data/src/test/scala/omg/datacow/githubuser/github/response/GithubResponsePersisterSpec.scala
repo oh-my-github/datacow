@@ -18,6 +18,7 @@ class GithubResponsePersisterSpec(_system: ActorSystem)
 
   def this() = this(ActorSystem("GithubResponsePersisterSpec"))
 
+
   override def beforeEach = { TestEnvMongoUtil.dropDatabase }
   override def afterAll = { TestKit.shutdownActorSystem(system) }
 

@@ -53,18 +53,22 @@ object TestEnvMongoUtil {
         .build())
     .build()
 
-  var mongod: MongodExecutable = _
-  var mongodExe: MongodProcess = _
+  var mongod: Option[MongodExecutable] = None
+  var mongodExe: Option[MongodProcess] = None
 
-  def initialize: Unit = {
-    mongod = MongodStarter.getInstance(runtimeConfig).prepare(mongodConfig)
-    mongodExe = mongod.start()
+  private def initialize: Unit = {
+    stop /* stop before running */
+    mongod =
+      Some(MongodStarter.getInstance(runtimeConfig).prepare(mongodConfig))
+    mongodExe = mongod.map { _.start() }
   }
-  def stop = {
-    mongod.stop()
-    mongodExe.stop()
+  private def stop = {
+    mongod.foreach( _.stop )
+    mongodExe.foreach { _.stop() }
   }
 
   def getMongoDB: MongoDB = MongoClient(getMongoURL)(mongoSchema)
   def dropDatabase = getMongoDB.dropDatabase
+
+  initialize
 }

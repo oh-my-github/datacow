@@ -59,21 +59,6 @@ class GithubResponseSpec extends FunSuite with Matchers {
     repoList.size shouldBe 2
   }
 
-  test("unmarshalled Repositories should have the same collectAt") {
-    val repoList = userReposExample.parseJson.convertTo[List[Repository]]
-
-    /* should greater than 1 to keep the semantic of this test */
-    repoList.size shouldBe 2
-
-    var collectAtSet: Set[DateTime] = Set()
-
-    repoList.foreach { repo =>
-      collectAtSet = collectAtSet + repo.collectAt
-    }
-
-    collectAtSet.size shouldBe 1
-  }
-
   test("unmarshall /repos/:owner/:repo") {
     val repo = userRepoExample.parseJson.convertTo[Repository]
     repo.name shouldBe "scala"
